@@ -1,0 +1,9 @@
+sequenceDiagram
+    autonumber
+    participant boot as Boot / app_main
+    participant gpio_input_pa0 as PA0
+    participant gpio_output_pd12 as PD12
+    boot->>gpio_input_pa0: configure pin=PA0
+    gpio_input_pa0-->boot: ready or error
+    boot->>gpio_output_pd12: configure pin=PD12
+    gpio_output_pd12-->boot: ready or error

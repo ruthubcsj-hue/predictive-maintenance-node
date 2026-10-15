@@ -1,0 +1,560 @@
+{
+  "schema_version": "2.1.0",
+  "id": "pir_my_firmware",
+  "revision": "d692db3726e4188d4da4b610fc65d60b",
+  "provenance": {
+    "project_path": "C:\\Users\\Ruthu B C\\OneDrive\\Documents\\GitHub Projects\\my_firmware",
+    "chat_id": "d1bda11a-f72f-4b84-b24b-1c45e3bdb71b",
+    "revision": "d692db3726e4188d4da4b610fc65d60b",
+    "generated_at_ms": 1792090005863,
+    "analyzer_version": "pir_maker-static-0.13.0",
+    "analyzed_files": [
+      "CMakeLists.txt",
+      "Core/Inc/main.h",
+      "Core/Inc/stm32_assert.h",
+      "Core/Inc/stm32f4xx_hal_conf.h",
+      "Core/Inc/stm32f4xx_it.h",
+      "Core/Src/main.c",
+      "Core/Src/stm32f4xx_it.c",
+      "Core/Src/system_stm32f4xx.c",
+      "firmware/app/app.c",
+      "firmware/app/app.h",
+      "firmware/bsp/board.c",
+      "firmware/bsp/board.h",
+      "firmware/configs/app_config.h",
+      "firmware/configs/build_config.h",
+      "firmware/configs/feature_config.h",
+      "firmware/configs/platform_config.h",
+      "firmware/interfaces/board_io.h",
+      "firmware/interfaces/console.h",
+      "firmware/osal/osal.h",
+      "firmware/platforms/stm32/board_io_stm32.c",
+      "firmware/platforms/stm32/board_io_stm32.h",
+      "firmware/platforms/stm32/console_stm32.c",
+      "firmware/utils/helpers/helpers.c",
+      "firmware/utils/helpers/helpers.h",
+      "firmware/utils/logger/logger.c",
+      "firmware/utils/logger/logger.h"
+    ],
+    "file_hashes": {
+      "Core/Src/stm32f4xx_it.c": "170ca56c0e2fdc3ce20e613e38da95ba",
+      "Core/Inc/main.h": "eac05602fd6647c6c65abdb2248bc396",
+      "firmware/interfaces/console.h": "0467800e7ec8e70b2ac61ebc69c77b4e",
+      "Core/Inc/stm32f4xx_hal_conf.h": "08d97f90e17d3b71d1134169eb9445b8",
+      "firmware/platforms/stm32/board_io_stm32.c": "922edac29cc34d15e0bd25c56302f80a",
+      "firmware/utils/logger/logger.c": "a0aa546944c77a82f438514b1f38d8cc",
+      "firmware/osal/osal.h": "f2f2c13784f7a100461b180f4028062b",
+      "firmware/configs/feature_config.h": "08ef51c6dfb8aa157bd736ea8388e0ba",
+      "CMakeLists.txt": "31670aa8f333dd5b3d74aa49b136edb1",
+      "firmware/app/app.h": "02b1a1c0bd1f2ba2335f74d8c05a1e8a",
+      "firmware/interfaces/board_io.h": "01149ab5d3387046e49fcf3e5b23b7de",
+      "firmware/app/app.c": "5b7098be2ec01d13a3ab840ceb0679aa",
+      "firmware/bsp/board.c": "e630056f89563be97755fb3703f3a541",
+      "Core/Src/main.c": "371503c48fb33b336d2f49d41ae2c7f7",
+      "firmware/configs/build_config.h": "dd997e9a0a461df28c370a61963fd7e5",
+      "firmware/utils/logger/logger.h": "642efceba068f0cfa4a70d8ce56bbd82",
+      "firmware/platforms/stm32/board_io_stm32.h": "6de99795f0453e3d662a3a46d5f67748",
+      "Core/Inc/stm32f4xx_it.h": "18be889f77442bdb4867d1b1b405cf08",
+      "firmware/utils/helpers/helpers.h": "ec8b635b7e5b55f8aeb8f47c3ff34312",
+      "Core/Inc/stm32_assert.h": "290ff09a08629c9051740ed255143fc8",
+      "firmware/bsp/board.h": "90e98737e2c3a7253caf5eb0dcec61c1",
+      "firmware/utils/helpers/helpers.c": "914568ab7415fec17e74f306cbb5ae09",
+      "firmware/platforms/stm32/console_stm32.c": "b52f2924ee61e711ca5ff9957f026c05",
+      "firmware/configs/platform_config.h": "010b01144dbd2d3fb63f3053b158ab7a",
+      "Core/Src/system_stm32f4xx.c": "1524951dd6118d781cca50c2f0beccf7",
+      "firmware/configs/app_config.h": "0ba2329af5962b88b6099c4a17d816ae"
+    },
+    "target_chip": null,
+    "config_hash": null,
+    "feature_flags": "mode=hybrid;refine=true"
+  },
+  "approval": {
+    "status": "stale"
+  },
+  "nodes": [
+    {
+      "id": "boot",
+      "node_type": "system_init",
+      "label": "Boot / app_main",
+      "properties": {
+        "target": "stm32"
+      },
+      "source_refs": [
+        {
+          "file": "Core/Src/main.c",
+          "confidence": 1.0,
+          "inferred_by": "static"
+        }
+      ],
+      "sync": {
+        "state": "synced",
+        "last_synced_revision": "d692db3726e4188d4da4b610fc65d60b"
+      },
+      "ownership": {
+        "primary_files": [
+          "Core/Src/main.c"
+        ]
+      },
+      "editable_fields": [],
+      "layer": "system",
+      "ai_summary": "Bootstraps firmware startup and initializes core subsystems.",
+      "confidence": 1.0,
+      "authority": "agent",
+      "semantic_tags": [],
+      "dependencies": []
+    },
+    {
+      "id": "gpio_output_pd12",
+      "node_type": "gpio_output",
+      "label": "PD12",
+      "properties": {
+        "pin": "PD12"
+      },
+      "source_refs": [
+        {
+          "file": "firmware/platforms/stm32/board_io_stm32.c",
+          "confidence": 1.0,
+          "inferred_by": "static"
+        }
+      ],
+      "sync": {
+        "state": "synced",
+        "last_synced_revision": "d692db3726e4188d4da4b610fc65d60b"
+      },
+      "ownership": {
+        "primary_files": [
+          "firmware/platforms/stm32/board_io_stm32.c"
+        ]
+      },
+      "editable_fields": [],
+      "layer": "physical",
+      "ai_summary": "Drives a digital output signal.",
+      "confidence": 1.0,
+      "authority": "agent",
+      "semantic_tags": [],
+      "dependencies": []
+    },
+    {
+      "id": "gpio_input_pa0",
+      "node_type": "gpio_input",
+      "label": "PA0",
+      "properties": {
+        "pin": "PA0"
+      },
+      "source_refs": [
+        {
+          "file": "firmware/platforms/stm32/board_io_stm32.c",
+          "confidence": 1.0,
+          "inferred_by": "static"
+        }
+      ],
+      "sync": {
+        "state": "synced",
+        "last_synced_revision": "d692db3726e4188d4da4b610fc65d60b"
+      },
+      "ownership": {
+        "primary_files": [
+          "firmware/platforms/stm32/board_io_stm32.c"
+        ]
+      },
+      "editable_fields": [],
+      "layer": "physical",
+      "ai_summary": "Reads a digital input signal.",
+      "confidence": 1.0,
+      "authority": "agent",
+      "semantic_tags": [],
+      "dependencies": []
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_boot_initializes_gpio_output_pd12",
+      "source_node_id": "boot",
+      "target_node_id": "gpio_output_pd12",
+      "kind": "hardware",
+      "confidence": 0.99,
+      "source_refs": [
+        {
+          "file": "Core/Src/main.c",
+          "line": 55,
+          "symbol": "main",
+          "confidence": 1.0,
+          "inferred_by": "static"
+        },
+        {
+          "file": "firmware/app/app.c",
+          "line": 39,
+          "symbol": "app_start",
+          "confidence": 1.0,
+          "inferred_by": "static"
+        },
+        {
+          "file": "firmware/platforms/stm32/board_io_stm32.c",
+          "line": 16,
+          "symbol": "board_io_init",
+          "confidence": 1.0,
+          "inferred_by": "static"
+        }
+      ],
+      "semantic_label": "initializes",
+      "validated": false
+    },
+    {
+      "id": "e_boot_initializes_gpio_input_pa0",
+      "source_node_id": "boot",
+      "target_node_id": "gpio_input_pa0",
+      "kind": "hardware",
+      "confidence": 0.99,
+      "source_refs": [
+        {
+          "file": "Core/Src/main.c",
+          "line": 55,
+          "symbol": "main",
+          "confidence": 1.0,
+          "inferred_by": "static"
+        },
+        {
+          "file": "firmware/app/app.c",
+          "line": 39,
+          "symbol": "app_start",
+          "confidence": 1.0,
+          "inferred_by": "static"
+        },
+        {
+          "file": "firmware/platforms/stm32/board_io_stm32.c",
+          "line": 16,
+          "symbol": "board_io_init",
+          "confidence": 1.0,
+          "inferred_by": "static"
+        }
+      ],
+      "semantic_label": "initializes",
+      "validated": false
+    }
+  ],
+  "layers": {
+    "physical": [
+      "gpio_output_pd12",
+      "gpio_input_pa0"
+    ],
+    "runtime": [],
+    "network": [],
+    "system": [
+      "boot"
+    ]
+  },
+  "partitions": [],
+  "components": [],
+  "modules": [
+    {
+      "id": "Core_Inc",
+      "label": "Core/Inc",
+      "path": "Core/Inc",
+      "kind": "module",
+      "files": [
+        "Core/Inc/main.h",
+        "Core/Inc/stm32_assert.h",
+        "Core/Inc/stm32f4xx_hal_conf.h",
+        "Core/Inc/stm32f4xx_it.h"
+      ]
+    },
+    {
+      "id": "Core_Src",
+      "label": "Core/Src",
+      "path": "Core/Src",
+      "kind": "module",
+      "files": [
+        "Core/Src/main.c",
+        "Core/Src/stm32f4xx_it.c",
+        "Core/Src/system_stm32f4xx.c"
+      ]
+    },
+    {
+      "id": "app",
+      "label": "app",
+      "path": "app",
+      "kind": "application",
+      "files": [
+        "firmware/app/app.c",
+        "firmware/app/app.h"
+      ]
+    },
+    {
+      "id": "bsp",
+      "label": "bsp",
+      "path": "bsp",
+      "kind": "board",
+      "files": [
+        "firmware/bsp/board.c",
+        "firmware/bsp/board.h"
+      ]
+    },
+    {
+      "id": "configs",
+      "label": "configs",
+      "path": "configs",
+      "kind": "configuration",
+      "files": [
+        "firmware/configs/app_config.h",
+        "firmware/configs/build_config.h",
+        "firmware/configs/feature_config.h",
+        "firmware/configs/platform_config.h"
+      ]
+    },
+    {
+      "id": "interfaces",
+      "label": "interfaces",
+      "path": "interfaces",
+      "kind": "module",
+      "files": [
+        "firmware/interfaces/board_io.h",
+        "firmware/interfaces/console.h"
+      ]
+    },
+    {
+      "id": "osal",
+      "label": "osal",
+      "path": "osal",
+      "kind": "abstraction",
+      "files": [
+        "firmware/osal/osal.h"
+      ]
+    },
+    {
+      "id": "platforms_stm32",
+      "label": "platforms/stm32",
+      "path": "platforms/stm32",
+      "kind": "platform",
+      "files": [
+        "firmware/platforms/stm32/board_io_stm32.c",
+        "firmware/platforms/stm32/board_io_stm32.h",
+        "firmware/platforms/stm32/console_stm32.c"
+      ]
+    },
+    {
+      "id": "utils_helpers",
+      "label": "utils/helpers",
+      "path": "utils/helpers",
+      "kind": "utility",
+      "files": [
+        "firmware/utils/helpers/helpers.c",
+        "firmware/utils/helpers/helpers.h"
+      ]
+    },
+    {
+      "id": "utils_logger",
+      "label": "utils/logger",
+      "path": "utils/logger",
+      "kind": "utility",
+      "files": [
+        "firmware/utils/logger/logger.c",
+        "firmware/utils/logger/logger.h"
+      ]
+    }
+  ],
+  "module_deps": [
+    {
+      "from": "Core_Src",
+      "to": "Core_Inc",
+      "via": "include",
+      "file": "Core/Src/main.c",
+      "line": 20,
+      "symbol": "main.h"
+    },
+    {
+      "from": "Core_Src",
+      "to": "app",
+      "via": "include",
+      "file": "Core/Src/main.c",
+      "line": 21,
+      "symbol": "app.h"
+    },
+    {
+      "from": "Core_Src",
+      "to": "platforms_stm32",
+      "via": "include",
+      "file": "Core/Src/stm32f4xx_it.c",
+      "line": 23,
+      "symbol": "board_io_stm32.h"
+    },
+    {
+      "from": "app",
+      "to": "configs",
+      "via": "include",
+      "file": "firmware/app/app.c",
+      "line": 7,
+      "symbol": "app_config.h"
+    },
+    {
+      "from": "app",
+      "to": "interfaces",
+      "via": "include",
+      "file": "firmware/app/app.c",
+      "line": 8,
+      "symbol": "board_io.h"
+    },
+    {
+      "from": "app",
+      "to": "utils_logger",
+      "via": "include",
+      "file": "firmware/app/app.c",
+      "line": 10,
+      "symbol": "logger.h"
+    },
+    {
+      "from": "bsp",
+      "to": "configs",
+      "via": "include",
+      "file": "firmware/bsp/board.h",
+      "line": 18,
+      "symbol": "app_config.h"
+    },
+    {
+      "from": "platforms_stm32",
+      "to": "bsp",
+      "via": "include",
+      "file": "firmware/platforms/stm32/board_io_stm32.c",
+      "line": 8,
+      "symbol": "board.h"
+    },
+    {
+      "from": "platforms_stm32",
+      "to": "configs",
+      "via": "include",
+      "file": "firmware/platforms/stm32/board_io_stm32.c",
+      "line": 7,
+      "symbol": "app_config.h"
+    },
+    {
+      "from": "platforms_stm32",
+      "to": "interfaces",
+      "via": "include",
+      "file": "firmware/platforms/stm32/board_io_stm32.c",
+      "line": 2,
+      "symbol": "board_io.h"
+    }
+  ],
+  "task_flows": [],
+  "summary": {
+    "headline": "3 nodes, 0 connections — valid",
+    "node_count": 3,
+    "edge_count": 0,
+    "warnings": []
+  },
+  "diagrams": {
+    "hld": {
+      "title": "High-Level Design",
+      "mermaid": "flowchart TD\n  subgraph BoardSignals[\"Board signals and timing\"]\n    button_pa0[\"User button input<br/>PA0, active-high\"]\n    led_pd12[\"Indicator LED output<br/>PD12, active-high\"]\n    systick[\"1 ms timebase<br/>SysTick_Config in Core/Src/main.c\"]\n    usart2_tx[\"UART console output<br/>USART2 TX on PA2\"]\n  end\n\n  subgraph Firmware[\"Firmware and platform\"]\n    app[\"Bring-up application<br/>firmware/app/app.c\"]\n    board_io[\"Board I/O adapter<br/>firmware/platforms/stm32/board_io_stm32.c\"]\n    console[\"Console transport<br/>firmware/platforms/stm32/console_stm32.c\"]\n  end\n\n  button_pa0 -->|PA0 input level| board_io\n  board_io -->|board_io_button_is_pressed| app\n  app -->|board_io_init / board_io_led_toggle / board_io_millis / board_io_wait_for_inter…| board_io\n  board_io -->|LL_GPIO_TogglePin on PD12| led_pd12\n  systick -->|SysTick_Handler calls board_io_stm32_systick_isr| board_io\n  app -->|console_init and LOGI via printf| console\n  console -->|_write via USART2 TX| usart2_tx",
+      "authored_by_model": true,
+      "node_notes": {
+        "usart2_tx": "USART2 transmits the application's console output through TX on PA2. firmware/configs/app_config.h assigns PA2, and firmware/platforms/stm32/console_stm32.c configures USART2 TX and implements the newlib _write transport.",
+        "app": "The application initializes board I/O and the console, then runs the LED and button bring-up loop. firmware/app/app.c uses the board_io interface and LOGI messages to implement this behavior.",
+        "systick": "The Cortex SysTick provides the millisecond interrupt used by the firmware timebase. Core/Src/main.c configures a 1 ms SysTick, and Core/Src/stm32f4xx_it.c forwards its handler to the STM32 board I/O adapter.",
+        "button_pa0": "The STM32F4DISCOVERY user button is an active-high input wired to PA0. The platform adapter reads it with LL_GPIO_IsInputPinSet, as configured by APP_BUTTON_GPIO_PORT and APP_BUTTON_GPIO_PIN in firmware/configs/app_config.h.",
+        "board_io": "This STM32 adapter configures and reads PA0, toggles the PD12 LED, maintains milliseconds, and waits with __WFI. These operations are implemented in firmware/platforms/stm32/board_io_stm32.c and its SysTick bridge is called from Core/Src/stm32f4xx_it.c.",
+        "led_pd12": "The onboard indicator LED is an active-high output wired to PD12. The STM32 adapter toggles it with LL_GPIO_TogglePin using APP_LED_GPIO_PORT and APP_LED_GPIO_PIN from firmware/configs/app_config.h.",
+        "console": "The console backend configures USART2 for transmit-only operation and routes printf output through _write. firmware/platforms/stm32/console_stm32.c assigns the configured PA2 pin to alternate function 7 and uses the 115200 baud setting."
+      }
+    },
+    "lld": {
+      "title": "Low-Level Design (Firmware Workflow)",
+      "mermaid": "flowchart TD\n  subgraph BringupLoop[\"Cooperative bring-up loop\"]\n    start[\"Initialize board GPIO<br/>app.c:52\"]\n    console_init[\"Initialize USART2 console<br/>app.c:53\"]\n    startup_log[\"Log bring-up started<br/>app.c:54\"]\n    seed[\"Seed LED time and button debounce state<br/>app.c:17-20\"]\n    sample[\"Read milliseconds and button state<br/>app.c:24-25\"]\n    led_due{\"200 ms LED interval elapsed — app.c:27\"}\n    toggle_led[\"Toggle indicator LED<br/>app.c:29-30\"]\n    button_changed{\"Sample differs from candidate — app.c:33\"}\n    set_candidate[\"Record candidate state and start debounce interval<br/>app.c:35-36\"]\n    debounce_ready{\"Candidate differs from stable state and debounce interval elapsed — app.c:38-40\"}\n    accept_button[\"Accept stable button state and log pressed or released<br/>app.c:42-44\"]\n    wait_irq[\"Wait for interrupt<br/>app.c:47\"]\n\n    start -->  console_init -->  startup_log -->  seed -->  sample\n    sample -->  led_due\n    led_due -->|Yes| toggle_led -->  button_changed\n    led_due -->|No| button_changed\n    button_changed -->|Yes| set_candidate -->  wait_irq\n    button_changed -->|No| debounce_ready\n    debounce_ready -->|Yes| accept_button -->  wait_irq\n    debounce_ready -->|No| wait_irq\n    wait_irq -->|Interrupt wake#59; next loop iteration| sample\n  end",
+      "authored_by_model": true,
+      "node_notes": {
+        "toggle_led": "When the LED interval has elapsed, the application toggles the indicator and records the current time. firmware/app/app.c:29-30 calls board_io_led_toggle and updates last_led_toggle_ms.",
+        "led_due": "This condition checks whether the configured LED period has elapsed since its previous toggle. firmware/app/app.c:27 compares elapsed time with APP_LED_PERIOD_MS, set to 200 ms in firmware/configs/app_config.h.",
+        "sample": "Each foreground iteration reads the millisecond counter and logical button state through board_io. The reads are in firmware/app/app.c:24-25, with the STM32 implementation in firmware/platforms/stm32/board_io_stm32.c.",
+        "debounce_ready": "When the sample remains unchanged, this condition checks for a difference from the stable state and expiration of the debounce interval. The compound test is in firmware/app/app.c:38-40 and uses APP_BUTTON_DEBOUNCE_MS from firmware/configs/app_config.h.",
+        "wait_irq": "The loop waits for an interrupt to reduce foreground polling, then resumes sampling after wake. firmware/app/app.c:47 calls board_io_wait_for_interrupt, implemented with __WFI in firmware/platforms/stm32/board_io_stm32.c.",
+        "accept_button": "A debounced change updates the stable state and logs whether B1 is pressed or released. firmware/app/app.c:42-44 performs the update and LOGI call.",
+        "start": "This step calls board_io_init before the application begins its bring-up loop. The call in firmware/app/app.c:52 prepares the platform's LED and button GPIOs.",
+        "seed": "The loop establishes its initial millisecond reference and button debounce candidate state before sampling continuously. These state variables are initialized in firmware/app/app.c:17-20.",
+        "console_init": "This step initializes the console before any application status messages are emitted. firmware/app/app.c:53 calls console_init, whose STM32 backend configures USART2 TX in firmware/platforms/stm32/console_stm32.c.",
+        "button_changed": "This condition detects a new sampled button state so the debounce candidate and its start time can be reset. The comparison is in firmware/app/app.c:33.",
+        "startup_log": "The application emits a startup message describing the LED blink and button debounce behavior. The LOGI call is in firmware/app/app.c:54 and is routed through the configured console.",
+        "set_candidate": "A changed sample becomes the new candidate and starts a fresh debounce interval. firmware/app/app.c:35-36 records both values."
+      }
+    },
+    "sequence": {
+      "title": "Sequence Diagram",
+      "mermaid": "sequenceDiagram\n  participant Main as Core main\n  participant App as Bring-up application\n  participant IO as STM32 board I/O\n  participant Button as PA0 user button\n  participant LED as PD12 indicator LED\n  participant Tick as SysTick\n  participant Console as USART2 console\n  participant UART as USART2 TX on PA2\n\n  Main->>App: app_start\n  App->>IO: board_io_init\n  App->>Console: console_init\n  App->>Console: LOGI bring-up started\n  Console->>UART: Send startup log bytes\n\n  loop Foreground loop; LED interval is 200 ms\n    App->>IO: board_io_millis\n    IO-->>App: Current milliseconds\n    App->>IO: board_io_button_is_pressed\n    IO->>Button: Sample PA0 with LL_GPIO_IsInputPinSet\n    Button-->>IO: Electrical input level\n    IO-->>App: Logical pressed state\n\n    alt LED interval elapsed\n      App->>IO: board_io_led_toggle\n      IO->>LED: LL_GPIO_TogglePin on PD12\n    else LED interval not elapsed\n      Note over App: Continue button debounce processing\n    end\n\n    alt Sample differs from candidate\n      App->>App: Update candidate and debounce start time\n    else Sample matches candidate\n      alt Candidate changed and debounce interval elapsed\n        App->>App: Accept stable button state\n        App->>Console: LOGI pressed or released\n        Console->>UART: Send button status bytes\n      else Debounce interval not complete or no stable change\n        Note over App: Keep current stable button state\n      end\n    end\n\n    App->>IO: board_io_wait_for_interrupt\n    IO->>Tick: __WFI until interrupt\n    Tick->>IO: SysTick_Handler calls board_io_stm32_systick_isr\n    IO-->>App: Return after interrupt wake\n  end",
+      "participants": [
+        "Main",
+        "App",
+        "IO",
+        "Button",
+        "LED",
+        "Tick",
+        "Console",
+        "UART"
+      ],
+      "generated_from": [
+        "Core/Src/main.c",
+        "firmware/platforms/stm32/board_io_stm32.c"
+      ],
+      "grounding": 0.0,
+      "authored_by_model": true
+    },
+    "model_pass_expected": true
+  },
+  "change_log": [],
+  "unresolved": [],
+  "read_only": false,
+  "graph_version": 14,
+  "generation": {
+    "mode": "static",
+    "triggered_by": "mount",
+    "analyzed_at_ms": 1792090005863,
+    "input_files": [
+      "CMakeLists.txt",
+      "Core/Inc/main.h",
+      "Core/Inc/stm32_assert.h",
+      "Core/Inc/stm32f4xx_hal_conf.h",
+      "Core/Inc/stm32f4xx_it.h",
+      "Core/Src/main.c",
+      "Core/Src/stm32f4xx_it.c",
+      "Core/Src/system_stm32f4xx.c",
+      "firmware/app/app.c",
+      "firmware/app/app.h",
+      "firmware/bsp/board.c",
+      "firmware/bsp/board.h",
+      "firmware/configs/app_config.h",
+      "firmware/configs/build_config.h",
+      "firmware/configs/feature_config.h",
+      "firmware/configs/platform_config.h",
+      "firmware/interfaces/board_io.h",
+      "firmware/interfaces/console.h",
+      "firmware/osal/osal.h",
+      "firmware/platforms/stm32/board_io_stm32.c",
+      "firmware/platforms/stm32/board_io_stm32.h",
+      "firmware/platforms/stm32/console_stm32.c",
+      "firmware/utils/helpers/helpers.c",
+      "firmware/utils/helpers/helpers.h",
+      "firmware/utils/logger/logger.c",
+      "firmware/utils/logger/logger.h"
+    ]
+  },
+  "sync_metadata": {
+    "project_file": "",
+    "content_hash": "",
+    "pending_patches": [],
+    "last_diff": {
+      "from_revision": "d692db3726e4188d4da4b610fc65d60b",
+      "to_revision": "d692db3726e4188d4da4b610fc65d60b",
+      "nodes_added": [],
+      "nodes_removed": [],
+      "nodes_changed": [],
+      "edges_added": [],
+      "edges_removed": [
+        "e_boot_initializes_gpio_output_pd12",
+        "e_boot_initializes_gpio_input_pa0"
+      ]
+    }
+  },
+  "validation_state": {
+    "valid": true,
+    "error_count": 0,
+    "warning_count": 0,
+    "validated_at_ms": 1792090005864
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "linker_script": {
+    "path": "STM32F407VGTX_FLASH.ld"
+  }
+}

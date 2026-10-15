@@ -1,0 +1,6 @@
+flowchart LR
+    boot(["Boot / app_main"])
+    gpio_output_pd12["PD12<br/>pin=PD12"]
+    gpio_input_pa0["PA0<br/>pin=PA0"]
+    boot -->|initializes| gpio_output_pd12
+    boot -->|initializes| gpio_input_pa0

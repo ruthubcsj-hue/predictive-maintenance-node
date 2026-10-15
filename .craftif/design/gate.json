@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at_ms": 1792087892088,
+  "passed": true,
+  "rules": [
+    {
+      "number": 1,
+      "rule": "All twelve sections present, in document order and numbering",
+      "outcome": "pass",
+      "evidence": "12/12 sections present in order; 0 empty (permitted)"
+    },
+    {
+      "number": 2,
+      "rule": "Nine figure slots present; always-drawn figures valid for their kind",
+      "outcome": "pass",
+      "evidence": "9/9 slots present; 6 drawn and valid; 3 carry a stated reason"
+    },
+    {
+      "number": 3,
+      "rule": "No banned template string in prose, table cells or diagram labels",
+      "outcome": "pass",
+      "evidence": "0 hits across 413 text and diagram bodies"
+    },
+    {
+      "number": 4,
+      "rule": "Every figure captioned and printed in its own section; every reference resolves",
+      "outcome": "pass",
+      "evidence": "9 captions; 9 references; 0 dangling"
+    },
+    {
+      "number": 5,
+      "rule": "No two drawn sequences share a participant and message set",
+      "outcome": "pass",
+      "evidence": "3 drawn sequences, all distinct"
+    },
+    {
+      "number": 6,
+      "rule": "Every cited source path was actually analysed",
+      "outcome": "pass",
+      "evidence": "23/23 cited paths resolve"
+    },
+    {
+      "number": 7,
+      "rule": "No stray placeholder, and no empty cell in a populated row",
+      "outcome": "pass",
+      "evidence": "83 table rows complete; 1 legitimate open-decision cells"
+    },
+    {
+      "number": 8,
+      "rule": "Each requirement ID appears exactly once",
+      "outcome": "skip",
+      "reason": "no requirements workbook is linked to this project"
+    }
+  ]
+}

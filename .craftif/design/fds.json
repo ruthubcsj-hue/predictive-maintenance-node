@@ -1,0 +1,1079 @@
+{
+  "schema_version": "1.1.0",
+  "doc_id": "FDS-MY-FIRMWARE-001",
+  "title": "Firmware Design Specification — my_firmware",
+  "provenance": {
+    "project_name": "my_firmware",
+    "pir_revision": "20b29c5b00cbfa9283c3fa8efecc8ed3",
+    "generated_at_ms": 1792087892085,
+    "analyzed_file_count": 24,
+    "diagrams_approved": false
+  },
+  "sections": [
+    {
+      "id": "purpose",
+      "number": "1",
+      "title": "Purpose and Scope",
+      "blocks": [
+        {
+          "block": "prose",
+          "text": "This firmware is an STM32-oriented GPIO prototype with PA0 recorded as an input and PD12 as an output. Its analysed scope includes the application, board-support and STM32 board-I/O layers; no tasks or transports are identified."
+        },
+        {
+          "block": "subheading",
+          "number": "1.1",
+          "title": "Source Basis"
+        },
+        {
+          "block": "table",
+          "columns": [
+            {
+              "header": "Source",
+              "decision_column": false
+            },
+            {
+              "header": "Use in this specification",
+              "decision_column": false
+            }
+          ],
+          "rows": [
+            [
+              "Analysed project sources (24 files)",
+              "Primary input. Every module, task flow, pin binding and partition in this document is read from these files."
+            ],
+            [
+              "PIR revision 20b29c5b00cbfa9283c3fa8efecc8ed3",
+              "The exact analysis this document describes. Regenerating after a source change produces a different revision."
+            ]
+          ]
+        },
+        {
+          "block": "subheading",
+          "number": "1.2",
+          "title": "Modelling Basis"
+        },
+        {
+          "block": "prose",
+          "text": "The structure of this document follows the information content of an IEEE 1016 software design description and the viewpoint structure of ISO/IEC/IEEE 42010. Interaction diagrams use UML sequence notation. The structure is a reference template; it does not claim certification to those standards."
+        },
+        {
+          "block": "subheading",
+          "number": "1.3",
+          "title": "Design Principles"
+        },
+        {
+          "block": "prose",
+          "text": "- The `app` and `bsp` modules are separated into application and board-support layers.\n- The `interfaces` module and `platforms/stm32` module separate the board-I/O interface from its STM32 platform implementation.\n- The `configs` module keeps configuration files separate from the application and platform modules."
+        },
+        {
+          "block": "subheading",
+          "number": "1.4",
+          "title": "Analysed Source Inventory"
+        },
+        {
+          "block": "table",
+          "columns": [
+            {
+              "header": "File",
+              "decision_column": false
+            },
+            {
+              "header": "Module",
+              "decision_column": false
+            },
+            {
+              "header": "Module kind",
+              "decision_column": false
+            },
+            {
+              "header": "Facts read from this file",
+              "decision_column": false
+            }
+          ],
+          "rows": [
+            [
+              "CMakeLists.txt",
+              "—",
+              "—",
+              "read; no facts cited from it"
+            ],
+            [
+              "Core/Inc/main.h",
+              "Core/Inc",
+              "module",
+              "read; no facts cited from it"
+            ],
+            [
+              "Core/Inc/stm32_assert.h",
+              "Core/Inc",
+              "module",
+              "read; no facts cited from it"
+            ],
+            [
+              "Core/Inc/stm32f4xx_hal_conf.h",
+              "Core/Inc",
+              "module",
+              "read; no facts cited from it"
+            ],
+            [
+              "Core/Inc/stm32f4xx_it.h",
+              "Core/Inc",
+              "module",
+              "read; no facts cited from it"
+            ],
+            [
+              "Core/Src/main.c",
+              "Core/Src",
+              "module",
+              "1 topology element(s); 2 include dependency(ies)"
+            ],
+            [
+              "Core/Src/stm32f4xx_it.c",
+              "Core/Src",
+              "module",
+              "1 include dependency(ies)"
+            ],
+            [
+              "Core/Src/system_stm32f4xx.c",
+              "Core/Src",
+              "module",
+              "read; no facts cited from it"
+            ],
+            [
+              "firmware/app/app.c",
+              "app",
+              "application",
+              "2 include dependency(ies)"
+            ],
+            [
+              "firmware/app/app.h",
+              "app",
+              "application",
+              "read; no facts cited from it"
+            ],
+            [
+              "firmware/bsp/board.c",
+              "bsp",
+              "board",
+              "read; no facts cited from it"
+            ],
+            [
+              "firmware/bsp/board.h",
+              "bsp",
+              "board",
+              "1 include dependency(ies)"
+            ],
+            [
+              "firmware/configs/app_config.h",
+              "configs",
+              "configuration",
+              "read; no facts cited from it"
+            ],
+            [
+              "firmware/configs/build_config.h",
+              "configs",
+              "configuration",
+              "read; no facts cited from it"
+            ],
+            [
+              "firmware/configs/feature_config.h",
+              "configs",
+              "configuration",
+              "read; no facts cited from it"
+            ],
+            [
+              "firmware/configs/platform_config.h",
+              "configs",
+              "configuration",
+              "read; no facts cited from it"
+            ],
+            [
+              "firmware/interfaces/board_io.h",
+              "interfaces",
+              "module",
+              "read; no facts cited from it"
+            ],
+            [
+              "firmware/osal/osal.h",
+              "osal",
+              "abstraction",
+              "read; no facts cited from it"
+            ],
+            [
+              "firmware/platforms/stm32/board_io_stm32.c",
+              "platforms/stm32",
+              "platform",
+              "2 topology element(s); 3 include dependency(ies)"
+            ],
+            [
+              "firmware/platforms/stm32/board_io_stm32.h",
+              "platforms/stm32",
+              "platform",
+              "read; no facts cited from it"
+            ],
+            [
+              "firmware/utils/helpers/helpers.c",
+              "utils/helpers",
+              "utility",
+              "read; no facts cited from it"
+            ],
+            [
+              "firmware/utils/helpers/helpers.h",
+              "utils/helpers",
+              "utility",
+              "read; no facts cited from it"
+            ],
+            [
+              "firmware/utils/logger/logger.c",
+              "utils/logger",
+              "utility",
+              "read; no facts cited from it"
+            ],
+            [
+              "firmware/utils/logger/logger.h",
+              "utils/logger",
+              "utility",
+              "read; no facts cited from it"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "system_context",
+      "number": "2",
+      "title": "System Context and Wiring Topology",
+      "blocks": [
+        {
+          "block": "note",
+          "text": "The diagrams in this document have not been marked reviewed in the Firmware Topology panel. They describe the analysed project as it stands; review them there before treating this document as approved."
+        },
+        {
+          "block": "figure",
+          "id": "fig1_wiring"
+        },
+        {
+          "block": "subheading",
+          "number": "2.1",
+          "title": "Wiring Control Table"
+        },
+        {
+          "block": "table",
+          "columns": [
+            {
+              "header": "Connection",
+              "decision_column": false
+            },
+            {
+              "header": "Baseline",
+              "decision_column": false
+            },
+            {
+              "header": "Editability",
+              "decision_column": false
+            },
+            {
+              "header": "Verification",
+              "decision_column": false
+            }
+          ],
+          "rows": [
+            [
+              "PA0",
+              "PA0",
+              "Platform — regenerated from the board configuration",
+              "Pin is input-capable at the expected level."
+            ],
+            [
+              "PD12",
+              "PD12",
+              "Platform — regenerated from the board configuration",
+              "Pin exists on the target and is drive-capable."
+            ]
+          ]
+        },
+        {
+          "block": "subheading",
+          "number": "2.2",
+          "title": "Dynamic Design Parameters"
+        },
+        {
+          "block": "table",
+          "columns": [
+            {
+              "header": "Parameter group",
+              "decision_column": false
+            },
+            {
+              "header": "Resolved baseline",
+              "decision_column": false
+            },
+            {
+              "header": "Still requires decision",
+              "decision_column": true
+            }
+          ],
+          "rows": [
+            [
+              "Peripherals",
+              "2 peripheral(s): PA0, PD12",
+              ""
+            ]
+          ]
+        },
+        {
+          "block": "subheading",
+          "number": "2.3",
+          "title": "Peripheral and Interface Configuration"
+        },
+        {
+          "block": "table",
+          "columns": [
+            {
+              "header": "Element",
+              "decision_column": false
+            },
+            {
+              "header": "Type",
+              "decision_column": false
+            },
+            {
+              "header": "Configured values",
+              "decision_column": false
+            },
+            {
+              "header": "Source",
+              "decision_column": false
+            }
+          ],
+          "rows": [
+            [
+              "Boot / app_main",
+              "system_init",
+              "target = stm32",
+              "Core/Src/main.c"
+            ],
+            [
+              "PD12",
+              "gpio_output",
+              "pin = PD12",
+              "firmware/platforms/stm32/board_io_stm32.c"
+            ],
+            [
+              "PA0",
+              "gpio_input",
+              "pin = PA0",
+              "firmware/platforms/stm32/board_io_stm32.c"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hld",
+      "number": "3",
+      "title": "High-Level Design (HLD)",
+      "blocks": [
+        {
+          "block": "figure",
+          "id": "fig2_hld"
+        },
+        {
+          "block": "subheading",
+          "number": "3.1",
+          "title": "Architectural Layers"
+        },
+        {
+          "block": "table",
+          "columns": [
+            {
+              "header": "Layer",
+              "decision_column": false
+            },
+            {
+              "header": "Source modules",
+              "decision_column": false
+            },
+            {
+              "header": "Runtime and hardware elements",
+              "decision_column": false
+            }
+          ],
+          "rows": [
+            [
+              "Application",
+              "app",
+              "—"
+            ],
+            [
+              "Platform and drivers",
+              "bsp, osal, platforms/stm32",
+              "PD12, PA0"
+            ],
+            [
+              "Configuration and support",
+              "configs, utils/helpers, utils/logger",
+              "Boot / app_main"
+            ]
+          ]
+        },
+        {
+          "block": "subheading",
+          "number": "3.3",
+          "title": "Shared Data and Synchronisation"
+        },
+        {
+          "block": "prose",
+          "text": "The brief identifies no tasks, so it does not establish task-to-task state flow or synchronization protection. It records PA0 as an input and PD12 as an output, but does not specify how their state is shared between components."
+        }
+      ]
+    },
+    {
+      "id": "lld",
+      "number": "4",
+      "title": "Low-Level Design (LLD)",
+      "blocks": [
+        {
+          "block": "figure",
+          "id": "fig3_lld"
+        },
+        {
+          "block": "figure",
+          "id": "fig4_fault_fsm"
+        },
+        {
+          "block": "subheading",
+          "number": "4.1",
+          "title": "Module Contracts"
+        },
+        {
+          "block": "table",
+          "columns": [
+            {
+              "header": "Module",
+              "decision_column": false
+            },
+            {
+              "header": "Kind",
+              "decision_column": false
+            },
+            {
+              "header": "Files",
+              "decision_column": false
+            },
+            {
+              "header": "Depends on",
+              "decision_column": false
+            },
+            {
+              "header": "Trace",
+              "decision_column": false
+            }
+          ],
+          "rows": [
+            [
+              "Core/Inc",
+              "module",
+              "4",
+              "—",
+              "Core/Inc"
+            ],
+            [
+              "Core/Src",
+              "module",
+              "3",
+              "Core_Inc, app, platforms_stm32",
+              "Core/Src/main.c:20"
+            ],
+            [
+              "app",
+              "application",
+              "2",
+              "configs, interfaces",
+              "firmware/app/app.c:7"
+            ],
+            [
+              "bsp",
+              "board",
+              "2",
+              "configs",
+              "firmware/bsp/board.h:18"
+            ],
+            [
+              "configs",
+              "configuration",
+              "4",
+              "—",
+              "configs"
+            ],
+            [
+              "interfaces",
+              "module",
+              "1",
+              "—",
+              "interfaces"
+            ],
+            [
+              "osal",
+              "abstraction",
+              "1",
+              "—",
+              "osal"
+            ],
+            [
+              "platforms/stm32",
+              "platform",
+              "2",
+              "bsp, configs, interfaces",
+              "firmware/platforms/stm32/board_io_stm32.c:8"
+            ],
+            [
+              "utils/helpers",
+              "utility",
+              "2",
+              "—",
+              "utils/helpers"
+            ],
+            [
+              "utils/logger",
+              "utility",
+              "2",
+              "—",
+              "utils/logger"
+            ]
+          ]
+        },
+        {
+          "block": "subheading",
+          "number": "4.2",
+          "title": "Key Data Contracts"
+        },
+        {
+          "block": "prose",
+          "text": "The only recorded peripheral-level contract is PA0 as a GPIO input and PD12 as a GPIO output. The brief does not establish exchanged fields, message formats, or other data contracts."
+        },
+        {
+          "block": "subheading",
+          "number": "4.4",
+          "title": "Include Dependencies"
+        },
+        {
+          "block": "table",
+          "columns": [
+            {
+              "header": "From",
+              "decision_column": false
+            },
+            {
+              "header": "To",
+              "decision_column": false
+            },
+            {
+              "header": "Via",
+              "decision_column": false
+            },
+            {
+              "header": "Symbol",
+              "decision_column": false
+            },
+            {
+              "header": "Trace",
+              "decision_column": false
+            }
+          ],
+          "rows": [
+            [
+              "Core/Src",
+              "Core/Inc",
+              "include",
+              "main.h",
+              "Core/Src/main.c:20"
+            ],
+            [
+              "Core/Src",
+              "app",
+              "include",
+              "app.h",
+              "Core/Src/main.c:21"
+            ],
+            [
+              "Core/Src",
+              "platforms/stm32",
+              "include",
+              "board_io_stm32.h",
+              "Core/Src/stm32f4xx_it.c:23"
+            ],
+            [
+              "app",
+              "configs",
+              "include",
+              "app_config.h",
+              "firmware/app/app.c:7"
+            ],
+            [
+              "app",
+              "interfaces",
+              "include",
+              "board_io.h",
+              "firmware/app/app.c:8"
+            ],
+            [
+              "bsp",
+              "configs",
+              "include",
+              "app_config.h",
+              "firmware/bsp/board.h:18"
+            ],
+            [
+              "platforms/stm32",
+              "bsp",
+              "include",
+              "board.h",
+              "firmware/platforms/stm32/board_io_stm32.c:8"
+            ],
+            [
+              "platforms/stm32",
+              "configs",
+              "include",
+              "app_config.h",
+              "firmware/platforms/stm32/board_io_stm32.c:7"
+            ],
+            [
+              "platforms/stm32",
+              "interfaces",
+              "include",
+              "board_io.h",
+              "firmware/platforms/stm32/board_io_stm32.c:2"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sequences",
+      "number": "5",
+      "title": "Sequence Diagrams",
+      "blocks": [
+        {
+          "block": "figure",
+          "id": "fig5_startup"
+        },
+        {
+          "block": "figure",
+          "id": "fig6_steady_state"
+        },
+        {
+          "block": "figure",
+          "id": "fig7_fault_sequence"
+        },
+        {
+          "block": "figure",
+          "id": "fig8_config_sequence"
+        },
+        {
+          "block": "figure",
+          "id": "fig9_update_sequence"
+        }
+      ]
+    },
+    {
+      "id": "security",
+      "number": "6",
+      "title": "Security and Update Design",
+      "blocks": [
+        {
+          "block": "subheading",
+          "number": "6.1",
+          "title": "Security and Update Surface"
+        },
+        {
+          "block": "table",
+          "columns": [
+            {
+              "header": "Surface",
+              "decision_column": false
+            },
+            {
+              "header": "Found in the analysed project",
+              "decision_column": false
+            },
+            {
+              "header": "Consequence for this design",
+              "decision_column": false
+            }
+          ],
+          "rows": [
+            [
+              "Update slot",
+              "No OTA partition among the 0 declared",
+              "The image can only be replaced over the wire by re-flashing."
+            ],
+            [
+              "Update service",
+              "No OTA or update element in the topology",
+              "Figure 9 is not drawn; there is no update flow to verify."
+            ],
+            [
+              "Secure boot and flash encryption",
+              "Not visible to static source analysis",
+              "Confirm against the build configuration; this document cannot establish either."
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "timing_budget",
+      "number": "7",
+      "title": "Timing and Resource Budget",
+      "blocks": [
+        {
+          "block": "table",
+          "columns": [
+            {
+              "header": "Budget item",
+              "decision_column": false
+            },
+            {
+              "header": "Requirement / baseline",
+              "decision_column": false
+            },
+            {
+              "header": "Design status",
+              "decision_column": true
+            },
+            {
+              "header": "Closure evidence",
+              "decision_column": false
+            }
+          ],
+          "rows": [
+            [
+              "Flash, RAM and CPU headroom",
+              "Not established by static analysis",
+              "Decision Required",
+              "Map file plus runtime resource measurement."
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "decision_register",
+      "number": "8",
+      "title": "Design Decision Register",
+      "blocks": [
+        {
+          "block": "note",
+          "text": "The analyser recorded no unresolved parameter at this revision, so there is no open decision to register here. Every parameter group in section 2.2 resolved to a baseline, and the items section 7 marks as requiring a decision are measurements rather than design choices."
+        }
+      ]
+    },
+    {
+      "id": "traceability",
+      "number": "9",
+      "title": "Requirement-to-Design Traceability",
+      "blocks": [
+        {
+          "block": "note",
+          "text": "No requirements workbook is linked to this project, so no requirement can be traced to a design element here. Link one from the project picker to populate this section."
+        }
+      ]
+    },
+    {
+      "id": "references",
+      "number": "10",
+      "title": "References",
+      "blocks": [
+        {
+          "block": "table",
+          "columns": [
+            {
+              "header": "Reference",
+              "decision_column": false
+            },
+            {
+              "header": "Purpose",
+              "decision_column": false
+            }
+          ],
+          "rows": [
+            [
+              "Project sources at revision 20b29c5b00cbfa9283c3fa8efecc8ed3",
+              "The implementation this document describes."
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "number": "11",
+      "title": "Consolidated Design Summary",
+      "blocks": [
+        {
+          "block": "prose",
+          "text": "The analysed firmware is organized into application, board-support, configuration, interface, platform, and utility modules. At the hardware boundary, the recorded GPIOs are PA0 as an input and PD12 as an output. The brief identifies no tasks, so it does not establish what the runtime does on each cycle. No buses, network transports, or sinks are recorded as destinations for data leaving the device. The module separation and the two GPIO roles are established, but detailed runtime behavior and data contracts are not specified in the brief. No open decisions are recorded."
+        },
+        {
+          "block": "subheading",
+          "number": "11.1",
+          "title": "The Design at a Glance"
+        },
+        {
+          "block": "table",
+          "columns": [
+            {
+              "header": "Aspect",
+              "decision_column": false
+            },
+            {
+              "header": "As built at this revision",
+              "decision_column": false
+            }
+          ],
+          "rows": [
+            [
+              "Target",
+              "Neither target chip nor board is recorded"
+            ],
+            [
+              "Analysed sources",
+              "24 file(s) across 10 module(s) and 0 build component(s)"
+            ],
+            [
+              "Topology",
+              "3 element(s) and 2 connection(s), of which 2 are evidenced in source"
+            ],
+            [
+              "Peripherals",
+              "PA0, PD12"
+            ],
+            [
+              "Runtime",
+              "No task was resolved to a defined entry function"
+            ],
+            [
+              "Network",
+              "No network transport is configured"
+            ],
+            [
+              "Storage",
+              "No partition table was read"
+            ],
+            [
+              "Figures",
+              "6 of 9 drawn; the remaining 3 state why they are not"
+            ],
+            [
+              "Open design decisions",
+              "None recorded; every parameter group in §2.2 resolved"
+            ],
+            [
+              "Requirement traceability",
+              "No workbook is linked, so nothing is traced"
+            ],
+            [
+              "Diagram review",
+              "Not yet marked reviewed; the figures describe the project as analysed"
+            ],
+            [
+              "Analysis provenance",
+              "pir_maker-static-0.13.0 in static mode; validation reports 0 error(s) and 0 warning(s)"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "appendix",
+      "number": "12",
+      "title": "Appendix A — Term, API and Symbol Index",
+      "blocks": [
+        {
+          "block": "note",
+          "text": "Every term below is a name the body of this document uses, resolved against the 140 name(s) indexed from the 24 analysed source file(s). 12 term(s) are listed; 39 name-like token(s) in the document resolved to no recorded location and are omitted rather than listed without one."
+        },
+        {
+          "block": "table",
+          "columns": [
+            {
+              "header": "Term",
+              "decision_column": false
+            },
+            {
+              "header": "Kind",
+              "decision_column": false
+            },
+            {
+              "header": "Defined or referenced at",
+              "decision_column": false
+            },
+            {
+              "header": "Where it appears in this document",
+              "decision_column": false
+            }
+          ],
+          "rows": [
+            [
+              "LL_GPIO_IsInputPinSet",
+              "external API",
+              "firmware/platforms/stm32/board_io_stm32.c:52",
+              "figure 2, 6"
+            ],
+            [
+              "LL_GPIO_TogglePin",
+              "external API",
+              "firmware/platforms/stm32/board_io_stm32.c:47",
+              "figure 2, 6"
+            ],
+            [
+              "SysTick_Config",
+              "external API",
+              "Core/Src/main.c:107",
+              "figure 2"
+            ],
+            [
+              "SysTick_Handler",
+              "function",
+              "Core/Src/stm32f4xx_it.c:120",
+              "figure 2, 6"
+            ],
+            [
+              "__WFI",
+              "external API",
+              "firmware/platforms/stm32/board_io_stm32.c:65",
+              "figure 6"
+            ],
+            [
+              "app_start",
+              "function",
+              "firmware/app/app.c:45",
+              "figure 6"
+            ],
+            [
+              "board_io_button_is_pressed",
+              "function",
+              "firmware/platforms/stm32/board_io_stm32.c:50",
+              "figure 2, 6"
+            ],
+            [
+              "board_io_init",
+              "function",
+              "firmware/platforms/stm32/board_io_stm32.c:15",
+              "figure 6"
+            ],
+            [
+              "board_io_led_toggle",
+              "function",
+              "firmware/platforms/stm32/board_io_stm32.c:45",
+              "figure 2, 6"
+            ],
+            [
+              "board_io_millis",
+              "function",
+              "firmware/platforms/stm32/board_io_stm32.c:58",
+              "figure 2, 6"
+            ],
+            [
+              "board_io_stm32_systick_isr",
+              "function",
+              "firmware/platforms/stm32/board_io_stm32.c:68",
+              "figure 2, 6"
+            ],
+            [
+              "board_io_wait_for_interrupt",
+              "function",
+              "firmware/platforms/stm32/board_io_stm32.c:63",
+              "figure 2, 6"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "figures": [
+    {
+      "id": "fig1_wiring",
+      "number": 1,
+      "caption": "Wiring and external connectivity topology.",
+      "kind": "wiring",
+      "tier": "conditional",
+      "mermaid": "flowchart LR\n    boot([\"Boot / app_main\"])\n    gpio_output_pd12[\"PD12<br/>pin=PD12\"]\n    gpio_input_pa0[\"PA0<br/>pin=PA0\"]\n    boot -->|initializes| gpio_output_pd12\n    boot -->|initializes| gpio_input_pa0"
+    },
+    {
+      "id": "fig2_hld",
+      "number": 2,
+      "caption": "High-level layered firmware architecture and dependency direction.",
+      "kind": "hld",
+      "tier": "always_drawn",
+      "mermaid": "flowchart TD\n  subgraph board[\"STM32F4DISCOVERY board I/O\"]\n    button_pa0[\"User button<br/>PA0\"]\n    led_pd12[\"Indicator LED LD4<br/>PD12\"]\n  end\n  subgraph firmware[\"Bare-metal bring-up firmware\"]\n    bringup_app[\"LED and button bring-up logic<br/>firmware/app/app.c\"]\n    board_io[\"STM32 GPIO and time adapter<br/>firmware/platforms/stm32/board_io_stm32.c\"]\n    systick[\"1 ms SysTick timebase<br/>SysTick_Config and SysTick_Handler\"]\n  end\n  button_pa0 -->|PA0 sampled by LL_GPIO_IsInputPinSet| board_io\n  board_io -->|board_io_button_is_pressed| bringup_app\n  bringup_app -->|board_io_millis / board_io_led_toggle / board_io_wait_for_interrupt| board_io\n  board_io -->|LL_GPIO_TogglePin on PD12| led_pd12\n  systick -->|board_io_stm32_systick_isr increments milliseconds| board_io"
+    },
+    {
+      "id": "fig3_lld",
+      "number": 3,
+      "caption": "Low-level module contracts and runtime control flow.",
+      "kind": "lld",
+      "tier": "always_drawn",
+      "mermaid": "flowchart TD\n  subgraph foreground[\"Cooperative foreground loop\"]\n    start[\"Start bring-up<br/>firmware/app/app.c:46-50\"]\n    init[\"Initialize board GPIO and timebase<br/>firmware/platforms/stm32/board_io_stm32.…\"]\n    seed[\"Seed LED timestamp and button debounce state<br/>firmware/app/app.c:13-16\"]\n    sample[\"Read milliseconds and sample button<br/>firmware/app/app.c:20-21\"]\n    led_due{\"LED period elapsed — firmware/app/app.c:23-26\"}\n    toggle[\"Toggle LED and update its timestamp<br/>firmware/app/app.c:24-25\"]\n    led_done[\"Continue button processing<br/>firmware/app/app.c:28\"]\n    changed{\"Sample differs from candidate — firmware/app/app.c:28-32\"}\n    update_candidate[\"Update candidate state and change time<br/>firmware/app/app.c:30-31\"]\n    debounce_due{\"Candidate differs from stable state and debounce elapsed — firmware/app/app.c:3…\"}\n    update_stable[\"Accept candidate as stable state<br/>firmware/app/app.c:39\"]\n    wait_irq[\"Wait for interrupt<br/>firmware/app/app.c:42\"]\n    start -->  init -->  seed -->  sample -->  led_due\n    led_due -->|yes| toggle -->  led_done\n    led_due -->|no| led_done\n    led_done -->  changed\n    changed -->|yes| update_candidate -->  wait_irq\n    changed -->|no| debounce_due\n    debounce_due -->|yes| update_stable -->  wait_irq\n    debounce_due -->|no| wait_irq\n    wait_irq -->|SysTick wake, 1 ms| sample\n  end"
+    },
+    {
+      "id": "fig4_fault_fsm",
+      "number": 4,
+      "caption": "Peripheral service state machine for initialisation, fault containment and controlled recovery.",
+      "kind": "state_machine",
+      "tier": "conditional",
+      "absent_reason": "Not drawn — a fault and recovery state machine needs an analysed task flow carrying both a decision step and an error step. No task flow in this project has both."
+    },
+    {
+      "id": "fig5_startup",
+      "number": 5,
+      "caption": "Startup and initialisation sequence.",
+      "kind": {
+        "sequence": "startup"
+      },
+      "tier": "always_drawn",
+      "mermaid": "sequenceDiagram\n    autonumber\n    participant boot as Boot / app_main\n    participant gpio_input_pa0 as PA0\n    participant gpio_output_pd12 as PD12\n    boot->>gpio_input_pa0: configure pin=PA0\n    gpio_input_pa0-->boot: ready or error\n    boot->>gpio_output_pd12: configure pin=PD12\n    gpio_output_pd12-->boot: ready or error"
+    },
+    {
+      "id": "fig6_steady_state",
+      "number": 6,
+      "caption": "Normal acquisition, processing and output sequence.",
+      "kind": {
+        "sequence": "steady_state"
+      },
+      "tier": "always_drawn",
+      "mermaid": "sequenceDiagram\n  participant Boot as Core main\n  participant App as Bring-up application\n  participant IO as STM32 board I/O adapter\n  participant Button as User button PA0\n  participant LED as LD4 LED PD12\n  participant Tick as SysTick\n  Boot->>Boot: Configure system clock and 1 ms SysTick\n  Boot->>App: app_start\n  App->>IO: board_io_init\n  IO-->>App: GPIO and timebase ready\n  App->>IO: Initialize LED timing and button debounce state\n  loop Foreground iterations, waking on SysTick\n    App->>IO: board_io_millis\n    App->>IO: board_io_button_is_pressed\n    IO->>Button: LL_GPIO_IsInputPinSet on PA0\n    Button-->>IO: Electrical input level\n    IO-->>App: Logical pressed state\n    alt 200 ms LED period elapsed\n      App->>IO: board_io_led_toggle\n      IO->>LED: LL_GPIO_TogglePin on PD12\n    else LED period has not elapsed\n      App->>App: Keep current LED state\n    end\n    alt Sample differs from debounce candidate\n      App->>App: Record candidate state and change time\n    else Sample matches debounce candidate\n      alt Candidate differs from stable state and 20 ms debounce elapsed\n        App->>App: Accept candidate as stable state\n      else Debounce interval is not complete or state is unchanged\n        App->>App: Keep stable state\n      end\n    end\n    App->>IO: board_io_wait_for_interrupt\n    IO->>Tick: __WFI until interrupt\n    Tick->>IO: SysTick_Handler calls board_io_stm32_systick_isr\n    IO-->>App: Millisecond counter advances and foreground resumes\n  end"
+    },
+    {
+      "id": "fig7_fault_sequence",
+      "number": 7,
+      "caption": "Fault detection and controlled recovery sequence.",
+      "kind": {
+        "sequence": "fault"
+      },
+      "tier": "conditional",
+      "absent_reason": "Not drawn — a fault recovery sequence needs both a task flow with an error path and a diagnostics or logging sink to report it to. This project does not have both."
+    },
+    {
+      "id": "fig8_config_sequence",
+      "number": 8,
+      "caption": "Validated and atomic configuration update sequence.",
+      "kind": {
+        "sequence": "config"
+      },
+      "tier": "conditional",
+      "mermaid": "sequenceDiagram\n    autonumber\n    actor client as Operator\n    participant config_service as configs\n    participant consumers as Configured consumers\n    client->>config_service: proposed configuration set\n    alt every value within bounds\n        config_service->>consumers: apply as one coherent set\n        config_service-->client: accepted\n    else any value invalid\n        config_service-->client: rejected#59; previous configuration kept\n    end"
+    },
+    {
+      "id": "fig9_update_sequence",
+      "number": 9,
+      "caption": "Secure firmware download, verification, staging and activation sequence.",
+      "kind": {
+        "sequence": "update"
+      },
+      "tier": "conditional",
+      "absent_reason": "Not drawn — no firmware update surface was found: no OTA or update node, and no OTA partition."
+    }
+  ]
+}

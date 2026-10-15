@@ -1,0 +1,15 @@
+flowchart TD
+  subgraph board["STM32F4DISCOVERY board I/O"]
+    button_pa0["User button<br/>PA0"]
+    led_pd12["Indicator LED LD4<br/>PD12"]
+  end
+  subgraph firmware["Bare-metal bring-up firmware"]
+    bringup_app["LED and button bring-up logic<br/>firmware/app/app.c"]
+    board_io["STM32 GPIO and time adapter<br/>firmware/platforms/stm32/board_io_stm32.c"]
+    systick["1 ms SysTick timebase<br/>SysTick_Config and SysTick_Handler"]
+  end
+  button_pa0 -->|PA0 sampled by LL_GPIO_IsInputPinSet| board_io
+  board_io -->|board_io_button_is_pressed| bringup_app
+  bringup_app -->|board_io_millis / board_io_led_toggle / board_io_wait_for_interrupt| board_io
+  board_io -->|LL_GPIO_TogglePin on PD12| led_pd12
+  systick -->|board_io_stm32_systick_isr increments milliseconds| board_io

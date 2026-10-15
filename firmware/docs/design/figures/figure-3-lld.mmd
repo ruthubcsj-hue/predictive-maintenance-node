@@ -1,0 +1,24 @@
+flowchart TD
+  subgraph foreground["Cooperative foreground loop"]
+    start["Start bring-up<br/>firmware/app/app.c:46-50"]
+    init["Initialize board GPIO and timebase<br/>firmware/platforms/stm32/board_io_stm32.…"]
+    seed["Seed LED timestamp and button debounce state<br/>firmware/app/app.c:13-16"]
+    sample["Read milliseconds and sample button<br/>firmware/app/app.c:20-21"]
+    led_due{"LED period elapsed — firmware/app/app.c:23-26"}
+    toggle["Toggle LED and update its timestamp<br/>firmware/app/app.c:24-25"]
+    led_done["Continue button processing<br/>firmware/app/app.c:28"]
+    changed{"Sample differs from candidate — firmware/app/app.c:28-32"}
+    update_candidate["Update candidate state and change time<br/>firmware/app/app.c:30-31"]
+    debounce_due{"Candidate differs from stable state and debounce elapsed — firmware/app/app.c:3…"}
+    update_stable["Accept candidate as stable state<br/>firmware/app/app.c:39"]
+    wait_irq["Wait for interrupt<br/>firmware/app/app.c:42"]
+    start -->  init -->  seed -->  sample -->  led_due
+    led_due -->|yes| toggle -->  led_done
+    led_due -->|no| led_done
+    led_done -->  changed
+    changed -->|yes| update_candidate -->  wait_irq
+    changed -->|no| debounce_due
+    debounce_due -->|yes| update_stable -->  wait_irq
+    debounce_due -->|no| wait_irq
+    wait_irq -->|SysTick wake, 1 ms| sample
+  end

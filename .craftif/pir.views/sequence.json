@@ -1,0 +1,10 @@
+{
+  "schema_version": "3.0.0",
+  "view": "sequence",
+  "revision": "ad8482454bbdb355ae588e2415586356",
+  "graph_version": 24,
+  "generated_at_ms": 1792091271179,
+  "mermaid": "sequenceDiagram\n  participant Boot\n  participant App\n  participant BoardIO as STM32 board I/O\n  participant Button as PA0 user button\n  participant LED as PD12 indicator LED\n  participant SysTick\n  participant Logger\n  participant Console as USART2 console\n  Boot->>App: app_start\n  App->>BoardIO: board_io_init\n  App->>Console: console_init\n  App->>Logger: LOGI bring-up started\n  Logger->>Console: printf output via _write\n  Console->>Console: Configure USART2 TX on PA2\n  loop Foreground iterations; LED interval 200 ms\n    SysTick-->>BoardIO: Increment millisecond counter\n    App->>BoardIO: Read milliseconds and button state\n    BoardIO->>Button: LL_GPIO_IsInputPinSet on PA0\n    Button-->>BoardIO: Electrical input level\n    alt 200 ms elapsed\n      App->>BoardIO: board_io_led_toggle\n      BoardIO->>LED: LL_GPIO_TogglePin on PD12\n    else LED interval not elapsed\n      App->>App: Keep LED state\n    end\n    alt Candidate button state changed\n      App->>App: Record candidate and start debounce interval\n    else Candidate unchanged\n      alt Candidate stable for 20 ms and differs from stable state\n        App->>Logger: LOGI pressed or released\n        Logger->>Console: printf output via _write\n      else Debounce interval not satisfied\n        App->>App: Keep stable button state\n      end\n    end\n    App->>BoardIO: board_io_wait_for_interrupt\n  end",
+  "title": "Sequence Diagram",
+  "authored_by_model": true
+}

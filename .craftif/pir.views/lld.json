@@ -1,0 +1,29 @@
+{
+  "schema_version": "3.0.0",
+  "view": "lld",
+  "revision": "ad8482454bbdb355ae588e2415586356",
+  "graph_version": 24,
+  "generated_at_ms": 1792091271178,
+  "mermaid": "flowchart TD\n  subgraph Foreground[\"Foreground bring-up loop\"]\n    enter[\"Start bring-up<br/>firmware/app/app.c:49\"]\n    initio[\"Initialize board GPIO adapter<br/>firmware/app/app.c:51\"]\n    initcon[\"Configure USART2 console<br/>firmware/app/app.c:52\"]\n    startlog[\"Log bring-up startup message<br/>firmware/app/app.c:53\"]\n    initstate[\"Initialize LED and button debounce state<br/>firmware/app/app.c:16-20\"]\n    sample[\"Read milliseconds and button state<br/>firmware/app/app.c:24-25\"]\n    led_due{\"200 ms elapsed since LED toggle? — firmware/app/app.c:27\"}\n    toggle[\"Toggle indicator LED and record time<br/>firmware/app/app.c:29-30\"]\n    led_skip[\"Keep LED state this iteration<br/>firmware/app/app.c:27-31\"]\n    led_join[\"Continue button debounce processing<br/>firmware/app/app.c:32\"]\n    button_changed{\"Sample differs from candidate state? — firmware/app/app.c:33\"}\n    update_candidate[\"Record candidate state and change time<br/>firmware/app/app.c:35-36\"]\n    debounce_due{\"Candidate stable for 20 ms and differs from stable state? — firmware/app/app.c:…\"}\n    stable_update[\"Accept the candidate as stable<br/>firmware/app/app.c:40\"]\n    log_button[\"Log pressed or released state<br/>firmware/app/app.c:41-42\"]\n    no_update[\"Leave stable button state unchanged<br/>firmware/app/app.c:38-43\"]\n    wait[\"Wait for interrupt<br/>firmware/app/app.c:45\"]\n    enter -->  initio -->  initcon -->  startlog -->  initstate -->  sample -->  led_due\n    led_due -->|Yes| toggle -->  led_join\n    led_due -->|No| led_skip -->  led_join\n    led_join -->  button_changed\n    button_changed -->|Yes| update_candidate -->  wait\n    button_changed -->|No| debounce_due\n    debounce_due -->|Yes| stable_update -->  log_button -->  wait\n    debounce_due -->|No| no_update -->  wait\n    wait -->|SysTick wake#59; LED period 200 ms| sample\n  end",
+  "title": "Low-Level Design (Firmware Workflow)",
+  "node_notes": {
+    "led_skip": "Keep LED state this iteration is a step in this firmware's runtime flow. The cite firmware/app/app.c:27-31 is the source evidence for it.",
+    "toggle": "Toggle indicator LED and record time is a step in this firmware's runtime flow. The cite firmware/app/app.c:29-30 is the source evidence for it.",
+    "initio": "Initialize board GPIO adapter is a step in this firmware's runtime flow. The cite firmware/app/app.c:51 is the source evidence for it.",
+    "initstate": "Initialize LED and button debounce state is a step in this firmware's runtime flow. The cite firmware/app/app.c:16-20 is the source evidence for it.",
+    "button_changed": "Sample differs from candidate state? — firmware/app/app.c:33 is part of this project's architecture. Select neighbouring boxes to see how it is wired into the rest of the system.",
+    "wait": "Wait for interrupt is a step in this firmware's runtime flow. The cite firmware/app/app.c:45 is the source evidence for it.",
+    "sample": "Read milliseconds and button state is a step in this firmware's runtime flow. The cite firmware/app/app.c:24-25 is the source evidence for it.",
+    "initcon": "Configure USART2 console is a step in this firmware's runtime flow. The cite firmware/app/app.c:52 is the source evidence for it.",
+    "no_update": "Leave stable button state unchanged is a step in this firmware's runtime flow. The cite firmware/app/app.c:38-43 is the source evidence for it.",
+    "enter": "Start bring-up is a step in this firmware's runtime flow. The cite firmware/app/app.c:49 is the source evidence for it.",
+    "stable_update": "Accept the candidate as stable is a step in this firmware's runtime flow. The cite firmware/app/app.c:40 is the source evidence for it.",
+    "led_join": "Continue button debounce processing is a step in this firmware's runtime flow. The cite firmware/app/app.c:32 is the source evidence for it.",
+    "led_due": "200 ms elapsed since LED toggle? — firmware/app/app.c:27 is part of this project's architecture. Select neighbouring boxes to see how it is wired into the rest of the system.",
+    "debounce_due": "Candidate stable for 20 ms and differs from stable state? — firmware/app/app.c:… is part of this project's architecture. Select neighbouring boxes to see how it is wired into the rest of the system.",
+    "update_candidate": "Record candidate state and change time is a step in this firmware's runtime flow. The cite firmware/app/app.c:35-36 is the source evidence for it.",
+    "log_button": "Log pressed or released state is a step in this firmware's runtime flow. The cite firmware/app/app.c:41-42 is the source evidence for it.",
+    "startlog": "Log bring-up startup message is a step in this firmware's runtime flow. The cite firmware/app/app.c:53 is the source evidence for it."
+  },
+  "authored_by_model": true
+}

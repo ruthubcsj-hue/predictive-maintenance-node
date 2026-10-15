@@ -1,0 +1,12 @@
+sequenceDiagram
+    autonumber
+    actor client as Operator
+    participant config_service as configs
+    participant consumers as Configured consumers
+    client->>config_service: proposed configuration set
+    alt every value within bounds
+        config_service->>consumers: apply as one coherent set
+        config_service-->client: accepted
+    else any value invalid
+        config_service-->client: rejected#59; previous configuration kept
+    end

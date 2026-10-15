@@ -1,0 +1,38 @@
+sequenceDiagram
+  participant Boot as Core main
+  participant App as Bring-up application
+  participant IO as STM32 board I/O adapter
+  participant Button as User button PA0
+  participant LED as LD4 LED PD12
+  participant Tick as SysTick
+  Boot->>Boot: Configure system clock and 1 ms SysTick
+  Boot->>App: app_start
+  App->>IO: board_io_init
+  IO-->>App: GPIO and timebase ready
+  App->>IO: Initialize LED timing and button debounce state
+  loop Foreground iterations, waking on SysTick
+    App->>IO: board_io_millis
+    App->>IO: board_io_button_is_pressed
+    IO->>Button: LL_GPIO_IsInputPinSet on PA0
+    Button-->>IO: Electrical input level
+    IO-->>App: Logical pressed state
+    alt 200 ms LED period elapsed
+      App->>IO: board_io_led_toggle
+      IO->>LED: LL_GPIO_TogglePin on PD12
+    else LED period has not elapsed
+      App->>App: Keep current LED state
+    end
+    alt Sample differs from debounce candidate
+      App->>App: Record candidate state and change time
+    else Sample matches debounce candidate
+      alt Candidate differs from stable state and 20 ms debounce elapsed
+        App->>App: Accept candidate as stable state
+      else Debounce interval is not complete or state is unchanged
+        App->>App: Keep stable state
+      end
+    end
+    App->>IO: board_io_wait_for_interrupt
+    IO->>Tick: __WFI until interrupt
+    Tick->>IO: SysTick_Handler calls board_io_stm32_systick_isr
+    IO-->>App: Millisecond counter advances and foreground resumes
+  end
