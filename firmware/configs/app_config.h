@@ -7,6 +7,19 @@
 #define APP_RED_LED_GPIO_PORT                     GPIOD
 #define APP_RED_LED_GPIO_PIN                      LL_GPIO_PIN_14
 
+#define APP_ORANGE_LED_GPIO_PORT                  GPIOD
+#define APP_ORANGE_LED_GPIO_PIN                   LL_GPIO_PIN_13
+#define APP_BLUE_LED_GPIO_PORT                    GPIOD
+#define APP_BLUE_LED_GPIO_PIN                     LL_GPIO_PIN_15
+#define APP_BUTTON_GPIO_PORT                      GPIOA
+#define APP_BUTTON_GPIO_PIN                       LL_GPIO_PIN_0
+#define APP_BUTTON_DEBOUNCE_MS                    200U
+/* Optional external active buzzer: + to PA1, - to GND. Harmless if not fitted. */
+#define APP_BUZZER_GPIO_PORT                      GPIOA
+#define APP_BUZZER_GPIO_PIN                       LL_GPIO_PIN_1
+#define APP_BUZZER_BEEP_PERIOD_MS                 200U
+#define APP_VIBRATION_WARNING_MULTIPLIER          1.5F
+
 #define APP_UART_TX_GPIO_PORT                     GPIOA
 #define APP_UART_TX_GPIO_PIN                      LL_GPIO_PIN_2
 #define APP_UART_BAUD_RATE                        115200U
@@ -33,9 +46,9 @@
 #define APP_SENSOR_STARTUP_SETTLE_MS              1U
 
 #define APP_VIBRATION_ANOMALY_MULTIPLIER          2.0F
-#define APP_ACCELEROMETER_LSB_G                   0.000048F
+#define APP_ACCELEROMETER_LSB_G                   0.00012F
 #define APP_ACCELEROMETER_SENSITIVITY_MG_PER_LSB  0.12F
-#define APP_ACCELEROMETER_OUTPUT_SHIFT            4U
+#define APP_ACCELEROMETER_OUTPUT_SHIFT            0U
 #define APP_ACCELEROMETER_FULL_SCALE_REGISTER     0x08U
 #define APP_ACCELEROMETER_FILTER_REGISTER         0x00U
 #define APP_ACCELEROMETER_DATA_RATE_REGISTER      0x60U
@@ -46,7 +59,12 @@
 #define APP_ACCELEROMETER_CTRL5_REGISTER          0x24U
 #define APP_ACCELEROMETER_OUTPUT_REGISTER         0x28U
 #define APP_ACCELEROMETER_READ_COMMAND            0x80U
-#define APP_ACCELEROMETER_MULTI_BYTE_COMMAND      0x40U
+/* LIS3DSH has no multi-byte command bit: bit 6 is an address bit. Burst reads use
+ * register auto-increment (CTRL_REG6 IF_ADD_INC), so this stays 0. */
+#define APP_ACCELEROMETER_MULTI_BYTE_COMMAND      0x00U
+#define APP_ACCELEROMETER_BDU_BIT                 0x08U
+#define APP_ACCELEROMETER_CTRL6_REGISTER          0x25U
+#define APP_ACCELEROMETER_CTRL6_VALUE             0x10U
 #define APP_ADC_VDDA_MIN_MV                       1800U
 #define APP_ADC_VDDA_MAX_MV                       3600U
 #define APP_ADC_TEMPERATURE_MIN_C                 (-40)

@@ -27,6 +27,30 @@ void board_io_init(void);
 void board_io_set_status_leds(bool green_is_on, bool red_is_on);
 
 /**
+ * @brief Applies the orange (warning / fault) and blue (calibrating) indicators.
+ *
+ * @param[in] orange_is_on true turns the orange indicator (LD3) on.
+ * @param[in] blue_is_on true turns the blue indicator (LD6) on.
+ *
+ * @pre board_io_init() has completed.
+ */
+void board_io_set_extra_leds(bool orange_is_on, bool blue_is_on);
+
+/**
+ * @brief Reads the user button (B1).
+ *
+ * @return true while the button is held down.
+ */
+bool board_io_button_is_pressed(void);
+
+/**
+ * @brief Drives the optional external buzzer output.
+ *
+ * @param[in] is_on true drives the buzzer pin high.
+ */
+void board_io_set_buzzer(bool is_on);
+
+/**
  * @brief Returns monotonic board time in milliseconds.
  *
  * The counter wraps naturally; use unsigned subtraction for elapsed-time checks.

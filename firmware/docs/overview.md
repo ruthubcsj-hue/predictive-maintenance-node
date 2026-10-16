@@ -9,8 +9,9 @@ This firmware monitors the board's LIS3DSH accelerometer and the STM32F407 inter
 - **Vibration metric:** remove each axis's mean over 100 samples, then compute RMS of the combined three-axis dynamic acceleration in g. Static gravity is not part of this RMS.
 - **Baseline:** arithmetic mean of the first ten complete one-second RMS windows. The status is `CALIBRATING` until those windows are collected; both indicators remain off unless an anomaly is latched.
 - **Anomaly policy:** vibration RMS greater than 2× baseline (using a one-LSB floor for a near-zero baseline), or temperature above 70 °C for three consecutive one-second readings. An active anomaly clears after three consecutive windows that satisfy both health checks.
-- **Indicators:** active-high green LD4 on PD12 means normal; active-high red LD5 on PD14 means anomaly. Both are off while calibrating and on sensor/ADC acquisition fault.
-- **Serial:** USART2 TX PA2 at 115200 baud, 8-N-1. Lines have `STATUS,RMS_g,TEMP_C` fields, e.g. `NORMAL,0.025,25.3`; calibration reports `CALIBRATING`, and invalid acquisition reports `FAULT,NA,NA`.
+- **Indicators:** blue LD6 = calibrating (first ten windows); green LD4 = normal; orange LD3 = warning (vibration RMS above 1.5x baseline); red LD5 = anomaly, with an optional external active buzzer on PA1 beeping at 2.5 Hz; orange + blue together = sensor/ADC acquisition fault.
+- **Recalibrate:** pressing the user button B1 (PA0) restarts baseline learning and prints `RECALIBRATING,NA,NA`.
+- **Serial:** USART2 TX PA2 at 115200 baud, 8-N-1. Lines have `STATUS,RMS_g,TEMP_C` fields, e.g. `NORMAL,0.025,25.3`; calibration reports `CALIBRATING`, an elevated reading reports `WARNING`, and invalid acquisition reports `FAULT,NA,NA`.
 
 ## Source responsibilities
 
@@ -23,4 +24,4 @@ This firmware monitors the board's LIS3DSH accelerometer and the STM32F407 inter
 
 ## Build and verification
 
-Build with the project's CMake + Ninja STM32 workflow and deploy using its ST-Link workflow. Connect a terminal to USART2 TX PA2 at 115200 baud, 8-N-1. After the ten-second baseline, leave the board still and check for `NORMAL`; then shake it and check for `ANOMALY` within three seconds. Stop motion and check for recovery after three healthy windows. Temperature persistence and sensor fault behavior require controlled input or safe fault-injection checks. Firmware has not yet been built or verified on hardware in this revision.
+Build with the project's CMake + Ninja STM32 workflow and deploy using its ST-Link workflow. Connect a terminal to USART2 TX PA2 at 115200 baud, 8-N-1. After the ten-second baseline, leave the board still and check for `NORMAL`; then shake it and check for `ANOMALY` within three seconds. Stop motion and check for recovery after three healthy windows. Temperature persistence and sensor fault behavior require controlled input or safe fault-injection checks. Built with CMake + Ninja (arm-none-eabi-gcc). Verified on an STM32F407G-DISC1 for the LED behavior; the temperature alarm, sensor-fault path and serial output were not verified.

@@ -1,21 +1,25 @@
 {
   "schema_version": "3.0.0",
   "view": "hld",
-  "revision": "ad8482454bbdb355ae588e2415586356",
-  "graph_version": 24,
-  "generated_at_ms": 1792091271177,
-  "mermaid": "flowchart TD\n  subgraph Firmware[\"Firmware\"]\n    app[\"Bring-up application<br/>firmware/app/app.c\"]\n    boardio[\"STM32 GPIO and time adapter<br/>firmware/platforms/stm32/board_io_stm32.c\"]\n    logger[\"Status logger<br/>firmware/utils/logger/logger.h: LOGI\"]\n    console[\"USART2 console transport<br/>firmware/platforms/stm32/console_stm32.c\"]\n    irq[\"SysTick interrupt handler<br/>Core/Src/stm32f4xx_it.c\"]\n  end\n  subgraph BoardIO[\"STM32F4DISCOVERY I/O\"]\n    button[\"User button input<br/>PA0\"]\n    led[\"Indicator LED output<br/>PD12\"]\n    systick[\"Millisecond SysTick\"]\n    uart[\"Serial console output<br/>USART2 TX on PA2\"]\n  end\n  app -->|board_io_init, board_io_button_is_pressed, board_io_led_toggle| boardio\n  app -->|LOGI| logger\n  logger -->|printf stdout/stderr| console\n  console -->|_write, LL_USART_TransmitData8| uart\n  boardio -->|LL_GPIO_IsInputPinSet| button\n  boardio -->|LL_GPIO_TogglePin| led\n  systick -->|1 ms interrupt| irq\n  irq -->|board_io_stm32_systick_isr| boardio",
+  "revision": "9cadd1ca1380b5fea35933ca41d52551",
+  "graph_version": 30,
+  "generated_at_ms": 1792128514404,
+  "mermaid": "flowchart TD\n    subgraph hld_lane_utility[\"Utilities\"]\n        utils_helpers[\"utils/helpers<br/>utility · 2 files\"]\n        utils_logger[\"utils/logger<br/>utility · 2 files\"]\n    end\n    subgraph hld_lane_hardware[\"Hardware\"]\n        hw_gpio_output_pd14[\"PD14<br/>pin=PD14\"]\n        hw_gpio_output_pe3[\"PE3<br/>pin=PE3\"]\n    end\n    app[\"app<br/>application · 2 files\"]\n    platforms_stm32[[\"platforms/stm32<br/>platform · 4 files\"]]\n    bsp[\"bsp<br/>board · 2 files\"]\n    osal[\"osal<br/>abstraction · 1 file\"]\n    configs[(\"configs<br/>configuration · 4 files\")]\n    Core_Inc[\"Core/Inc<br/>module · 4 files\"]\n    Core_Src[\"Core/Src<br/>module · 3 files\"]\n    interfaces[\"interfaces<br/>module · 3 files\"]\n    Core_Src -->|main.h| Core_Inc\n    Core_Src -->|app.h| app\n    Core_Src -->|board_io_stm32.h| platforms_stm32\n    app -->|app_config.h| configs\n    app -->|board_io.h| interfaces\n    bsp -->|app_config.h| configs\n    platforms_stm32 -->|board.h| bsp\n    platforms_stm32 -->|app_config.h| configs\n    platforms_stm32 -->|board_io.h| interfaces\n    app -->|pin #40;PD14#41;| hw_gpio_output_pd14\n    app -->|pin #40;PE3#41;| hw_gpio_output_pe3\n    classDef hldEntrypoint fill:#1f6feb,stroke:#4c8dff,color:#ffffff,stroke-width:2px\n    classDef hldApplication fill:#123324,stroke:#2ecf82,color:#c9f5e0,stroke-width:2px\n    classDef hldDriver fill:#12283a,stroke:#4aa3df,color:#cfe8f7,stroke-width:2px\n    classDef hldPlatform fill:#2b1f3a,stroke:#a97fe0,color:#e3d5f7,stroke-width:2px\n    classDef hldBoard fill:#3a1e12,stroke:#e2703a,color:#ffd9c7,stroke-width:2px\n    classDef hldUtility fill:#22262b,stroke:#8b949e,color:#d6dde5,stroke-width:2px\n    classDef hldConfiguration fill:#3a2f12,stroke:#d9a441,color:#f2e3c0,stroke-width:2px\n    classDef hldHardware fill:#3a1e12,stroke:#e2703a,color:#ffd9c7,stroke-width:2px\n    classDef hldNetwork fill:#12283a,stroke:#4aa3df,color:#cfe8f7,stroke-width:2px\n    classDef hldSink fill:#123324,stroke:#2ecf82,color:#c9f5e0,stroke-width:2px\n    class app hldApplication\n    class platforms_stm32 hldPlatform\n    class bsp hldBoard\n    class osal hldPlatform\n    class utils_helpers hldUtility\n    class utils_logger hldUtility\n    class configs hldConfiguration\n    class hw_gpio_output_pd14 hldHardware\n    class hw_gpio_output_pe3 hldHardware",
   "title": "High-Level Design",
+  "generation_error": "Showing the analysed-file fallback — the model pass failed: PIR sub-agent error: network error communicating with the model (2): ScratchError { status_code: 500, message: \"{\\\"message\\\":\\\"You've used your free FirmGen credits. Upgrade to Pro for a pooled credit balance across all products.\\\",\\\"type\\\":\\\"api_error\\\"}\", telemetry_skip: false }",
   "node_notes": {
-    "button": "This is the active-high user-button input connected to PA0. The adapter samples it with LL_GPIO_IsInputPinSet and board_button_is_pressed, as configured in firmware/configs/app_config.h and firmware/bsp/board.h.",
-    "systick": "The 1 ms SysTick interrupt advances the adapter's monotonic millisecond count. Core/Src/main.c configures the tick and Core/Src/stm32f4xx_it.c forwards it to the board adapter.",
-    "uart": "USART2 provides the console transmit path on PA2, configured for 115200 baud and TX-only operation. firmware/platforms/stm32/console_stm32.c writes bytes with LL_USART_TransmitData8.",
-    "console": "This backend routes stdout and stderr to USART2 transmit and configures the TX alternate function on PA2. Its initialization and _write transport are implemented in firmware/platforms/stm32/console_stm32.c.",
-    "irq": "The Cube SysTick handler forwards each tick to the STM32 board adapter. Core/Src/stm32f4xx_it.c calls board_io_stm32_systick_isr.",
-    "led": "This is the active-high indicator LED output connected to PD12. The application toggles it through board_io_led_toggle, implemented with LL_GPIO_TogglePin in firmware/platforms/stm32/board_io_stm32.c.",
-    "boardio": "This STM32 adapter implements the board I/O calls using LL GPIO operations and a SysTick-backed millisecond counter. It reads PA0 and toggles PD12 in firmware/platforms/stm32/board_io_stm32.c.",
-    "app": "This application runs the cooperative LED blink and button debounce logic. It uses the board I/O contract and logs startup and button transitions, as shown in firmware/app/app.c.",
-    "logger": "The logger macros format application status messages through printf. LOGI is used for startup and accepted button-state changes in firmware/utils/logger/logger.h and firmware/app/app.c."
+    "Core_Src": "Core/Src is a module module at Core/Src. It owns 3 source files this architecture is built from.",
+    "utils_helpers": "utils/helpers is a utility module at utils/helpers. It owns 2 source files this architecture is built from.",
+    "osal": "osal is a abstraction module at osal. It owns 1 source file this architecture is built from.",
+    "Core_Inc": "Core/Inc is a module module at Core/Inc. It owns 4 source files this architecture is built from.",
+    "utils_logger": "utils/logger is a utility module at utils/logger. It owns 2 source files this architecture is built from.",
+    "bsp": "bsp is a board module at bsp. It owns 2 source files this architecture is built from.",
+    "app": "app is a application module at app. It owns 2 source files this architecture is built from.",
+    "platforms_stm32": "platforms/stm32 is a platform module at platforms/stm32. It owns 4 source files this architecture is built from.",
+    "hw_gpio_output_pe3": "PE3 is a step in this firmware's runtime flow. The cite pin=PE3 is the source evidence for it.",
+    "hw_gpio_output_pd14": "PD14 is a step in this firmware's runtime flow. The cite pin=PD14 is the source evidence for it.",
+    "interfaces": "interfaces is a module module at interfaces. It owns 3 source files this architecture is built from.",
+    "configs": "configs is a configuration module at configs. It owns 4 source files this architecture is built from."
   },
-  "authored_by_model": true
+  "authored_by_model": false
 }

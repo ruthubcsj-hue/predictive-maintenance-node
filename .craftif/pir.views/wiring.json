@@ -1,9 +1,9 @@
 {
   "schema_version": "3.0.0",
   "view": "wiring",
-  "revision": "ad8482454bbdb355ae588e2415586356",
-  "graph_version": 24,
-  "generated_at_ms": 1792091271177,
+  "revision": "9cadd1ca1380b5fea35933ca41d52551",
+  "graph_version": 30,
+  "generated_at_ms": 1792128514403,
   "graph": {
     "schema_version": 1,
     "id": "pir_my_firmware",
@@ -31,18 +31,18 @@
         "execution": {},
         "visual": {
           "x": 0.0,
-          "y": 94.0,
+          "y": 0.0,
           "layer": 0
         }
       },
       {
-        "id": "gpio_output_pd12",
+        "id": "gpio_output_pd14",
         "node_type": "gpio_output",
-        "label": "PD12",
+        "label": "PD14",
         "description": "Drives a digital output signal.",
         "ports": [
           {
-            "id": "gpio_output_pd12_exec_in_0",
+            "id": "gpio_output_pd14_exec_in_0",
             "name": "exec_in",
             "direction": "input",
             "datatype": "execution",
@@ -50,7 +50,7 @@
             "multiplicity": "one"
           },
           {
-            "id": "gpio_output_pd12_gpio_in_1",
+            "id": "gpio_output_pd14_gpio_in_1",
             "name": "gpio_in",
             "direction": "input",
             "datatype": "gpio_level",
@@ -59,59 +59,50 @@
           }
         ],
         "properties": {
-          "pin": "PD12"
+          "pin": "PD14"
         },
         "execution": {},
         "visual": {
-          "x": 140.0,
-          "y": 188.0,
-          "layer": 1
+          "x": 48.0,
+          "y": 0.0,
+          "layer": 0
         }
       },
       {
-        "id": "gpio_input_pa0",
-        "node_type": "gpio_input",
-        "label": "PA0",
-        "description": "Reads a digital input signal.",
+        "id": "gpio_output_pe3",
+        "node_type": "gpio_output",
+        "label": "PE3",
+        "description": "Drives a digital output signal.",
         "ports": [
           {
-            "id": "gpio_input_pa0_exec_in_0",
+            "id": "gpio_output_pe3_exec_in_0",
             "name": "exec_in",
             "direction": "input",
             "datatype": "execution",
-            "required": false,
+            "required": true,
             "multiplicity": "one"
           },
           {
-            "id": "gpio_input_pa0_gpio_out_1",
-            "name": "gpio_out",
-            "direction": "output",
+            "id": "gpio_output_pe3_gpio_in_1",
+            "name": "gpio_in",
+            "direction": "input",
             "datatype": "gpio_level",
-            "required": true,
+            "required": false,
             "multiplicity": "one"
           }
         ],
         "properties": {
-          "pin": "PA0"
+          "pin": "PE3"
         },
         "execution": {},
         "visual": {
-          "x": 140.0,
+          "x": 96.0,
           "y": 0.0,
-          "layer": 1
+          "layer": 0
         }
       }
     ],
-    "connections": [
-      [
-        "boot_boot_out_0",
-        "gpio_output_pd12_gpio_in_1"
-      ],
-      [
-        "boot_boot_out_0",
-        "gpio_input_pa0_exec_in_0"
-      ]
-    ],
+    "connections": [],
     "layout": {
       "orientation": "",
       "node_width": 0.0,

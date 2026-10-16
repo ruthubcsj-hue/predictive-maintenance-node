@@ -59,7 +59,7 @@ bool maintenance_sensor_init(void)
 /**
  * @brief Reads the onboard LIS3DSH X/Y/Z acceleration in g.
  *
- * Raw data follows the LIS3DSH 12-bit left-aligned output format and is
+ * Raw data follows the LIS3DSH 16-bit two's-complement output format and is
  * converted using the ±4 g sensitivity of 0.12 mg/LSB.
  *
  * @param[out] acceleration_g Three-element X/Y/Z destination in g.
@@ -78,7 +78,7 @@ bool maintenance_sensor_read_acceleration(float acceleration_g[3])
     }
 
     sensor_io_fault = false;
-    if (!sensor_spi_read(SENSOR_LIS3DSH_OUTPUT_X_L, raw, sizeof(raw)) ||
+    if (!sensor_spi_read(APP_ACCELEROMETER_OUTPUT_REGISTER, raw, sizeof(raw)) ||
         sensor_io_fault)
     {
         return false;
@@ -89,9 +89,9 @@ bool maintenance_sensor_read_acceleration(float acceleration_g[3])
         uint16_t packed = (uint16_t)raw[(uint8_t)(axis_index * 2U)] |
             (uint16_t)((uint16_t)raw[(uint8_t)(axis_index * 2U + 1U)] << 8U);
         int16_t signed_packed = (int16_t)packed;
-        int16_t sample = (int16_t)(signed_packed >> SENSOR_LIS3DSH_OUTPUT_SHIFT);
+        int16_t sample = (int16_t)(signed_packed >> APP_ACCELEROMETER_OUTPUT_SHIFT);
         acceleration_g[axis_index] =
-            ((float)sample * SENSOR_LIS3DSH_SENSITIVITY_MG) / 1000.0F;
+            ((float)sample * APP_ACCELEROMETER_SENSITIVITY_MG_PER_LSB) / 1000.0F;
     }
 
     return true;
@@ -131,16 +131,16 @@ bool maintenance_sensor_read_temperature(float *temperature_c)
 
     supply_mv = (VREFINT_CAL_VREF * (uint32_t)(*VREFINT_CAL_ADDR)) /
                 (uint32_t)reference_raw;
-    if ((supply_mv < SENSOR_VDDA_MIN_MV) ||
-        (supply_mv > SENSOR_VDDA_MAX_MV))
+    if ((supply_mv < APP_ADC_VDDA_MIN_MV) ||
+        (supply_mv > APP_ADC_VDDA_MAX_MV))
     {
         return false;
     }
 
     temperature_result_c = (int32_t)__LL_ADC_CALC_TEMPERATURE(
         supply_mv, temperature_raw, LL_ADC_RESOLUTION_12B);
-    if ((temperature_result_c < SENSOR_TEMP_MIN_C) ||
-        (temperature_result_c > SENSOR_TEMP_MAX_C))
+    if ((temperature_result_c < APP_ADC_TEMPERATURE_MIN_C) ||
+        (temperature_result_c > APP_ADC_TEMPERATURE_MAX_C))
     {
         return false;
     }
@@ -282,7 +282,7 @@ static bool sensor_spi_wait_idle(void)
 static bool sensor_spi_read(uint8_t address, uint8_t *data, uint16_t size)
 {
     uint16_t byte_index;
-    uint8_t command = (uint8_t)(address | SENSOR_SPI_READ_COMMAND);
+    uint8_t command = (uint8_t)(address | APP_ACCELEROMETER_READ_COMMAND);
     bool is_valid;
 
     if ((data == NULL) || (size == 0U) ||
@@ -293,7 +293,7 @@ static bool sensor_spi_read(uint8_t address, uint8_t *data, uint16_t size)
 
     if (size > 1U)
     {
-        command |= (uint8_t)SENSOR_SPI_MULTI_BYTE;
+        command |= (uint8_t)APP_ACCELEROMETER_MULTI_BYTE_COMMAND;
     }
 
     LL_GPIO_ResetOutputPin(APP_ACCELEROMETER_CS_GPIO_PORT,
@@ -328,7 +328,7 @@ static bool sensor_spi_write(uint8_t address, const uint8_t *data, uint16_t size
 
     if (size > 1U)
     {
-        command |= (uint8_t)SENSOR_SPI_MULTI_BYTE;
+        command |= (uint8_t)APP_ACCELEROMETER_MULTI_BYTE_COMMAND;
     }
 
     LL_GPIO_ResetOutputPin(APP_ACCELEROMETER_CS_GPIO_PORT,
@@ -352,19 +352,22 @@ static bool sensor_spi_write(uint8_t address, const uint8_t *data, uint16_t size
 static bool sensor_lis3dsh_init(void)
 {
     uint8_t device_id = 0U;
-    uint8_t control_register_4 = (uint8_t)(SENSOR_LIS3DSH_DATA_RATE_100 |
-                                           SENSOR_LIS3DSH_ENABLE_XYZ);
-    uint8_t control_register_5 = (uint8_t)(SENSOR_LIS3DSH_SCALE_4G |
-                                           SENSOR_LIS3DSH_FILTER_800HZ);
+    uint8_t control_register_4 = (uint8_t)(APP_ACCELEROMETER_DATA_RATE_REGISTER |
+                                           APP_ACCELEROMETER_ENABLE_AXES_REGISTER |
+                                           APP_ACCELEROMETER_BDU_BIT);
+    uint8_t control_register_6 = APP_ACCELEROMETER_CTRL6_VALUE;
+    uint8_t control_register_5 = (uint8_t)(APP_ACCELEROMETER_FULL_SCALE_REGISTER |
+                                           APP_ACCELEROMETER_FILTER_REGISTER);
 
-    if (!sensor_spi_read(SENSOR_LIS3DSH_WHO_AM_I_REG, &device_id, 1U) ||
-        (device_id != SENSOR_LIS3DSH_ID))
+    if (!sensor_spi_read(APP_ACCELEROMETER_ID_REGISTER, &device_id, 1U) ||
+        (device_id != APP_ACCELEROMETER_ID_VALUE))
     {
         return false;
     }
 
-    if (!sensor_spi_write(SENSOR_LIS3DSH_CTRL_REG4, &control_register_4, 1U) ||
-        !sensor_spi_write(SENSOR_LIS3DSH_CTRL_REG5, &control_register_5, 1U))
+    if (!sensor_spi_write(APP_ACCELEROMETER_CTRL4_REGISTER, &control_register_4, 1U) ||
+        !sensor_spi_write(APP_ACCELEROMETER_CTRL5_REGISTER, &control_register_5, 1U) ||
+        !sensor_spi_write(APP_ACCELEROMETER_CTRL6_REGISTER, &control_register_6, 1U))
     {
         return false;
     }

@@ -18,6 +18,9 @@ static bool app_baseline_is_ready;
 static bool app_fault_is_active;
 static bool app_anomaly_is_active;
 static bool app_has_valid_window;
+static bool app_warning_is_active;
+static bool app_button_was_pressed;
+static uint32_t app_button_ignore_until_ms;
 static uint8_t app_baseline_windows;
 static uint8_t app_temperature_high_windows;
 static uint8_t app_healthy_windows;
@@ -40,6 +43,8 @@ static void app_apply_status_outputs(void);
 static void app_report_status(uint32_t now_ms);
 static const char *app_status_name(void);
 static void app_enter_fault(void);
+static void app_handle_button(uint32_t now_ms);
+static void app_restart_baseline(void);
 
 /**
  * @brief Runs the 100 Hz sample, one-second RMS and status reporting loop.
@@ -54,7 +59,8 @@ static void app_run_monitoring_loop(void)
     {
         uint32_t now_ms = board_io_millis();
 
-        if (app_time_reached(now_ms, app_next_sample_deadline_ms))
+        if (!app_fault_is_active &&
+            app_time_reached(now_ms, app_next_sample_deadline_ms))
         {
             app_next_sample_deadline_ms += APP_VIBRATION_SAMPLE_PERIOD_MS;
             if (!app_collect_sample())
@@ -80,6 +86,7 @@ static void app_run_monitoring_loop(void)
             app_report_status(now_ms);
         }
 
+        app_handle_button(now_ms);
         app_apply_status_outputs();
         board_io_wait_for_interrupt();
     }
@@ -171,6 +178,7 @@ static float app_compute_detrended_rms(void)
 static void app_update_status(uint32_t now_ms)
 {
     bool vibration_is_high = false;
+    bool vibration_is_warning = false;
     bool temperature_is_high;
     bool window_is_healthy;
 
@@ -196,6 +204,8 @@ static void app_update_status(uint32_t now_ms)
         }
         vibration_is_high = app_vibration_rms_g >
             (APP_VIBRATION_ANOMALY_MULTIPLIER * comparison_baseline_g);
+        vibration_is_warning = app_vibration_rms_g >
+            (APP_VIBRATION_WARNING_MULTIPLIER * comparison_baseline_g);
     }
 
     temperature_is_high = app_temperature_c >
@@ -239,27 +249,75 @@ static void app_update_status(uint32_t now_ms)
         }
     }
 
+    app_warning_is_active = app_baseline_is_ready && !app_anomaly_is_active &&
+                            vibration_is_warning;
     (void)now_ms;
 }
 
-/* Selects an LED state from the baseline, fault and anomaly state. */
+/* Selects LED and buzzer states: blue=calibrating, green=normal, orange=warning,
+ * red+buzzer=anomaly, orange+blue together=sensor fault. */
 static void app_apply_status_outputs(void)
 {
     bool green_is_on = false;
     bool red_is_on = false;
+    bool orange_is_on = false;
+    bool blue_is_on = false;
+    bool buzzer_is_on = false;
 
-    if (!app_fault_is_active && app_baseline_is_ready)
+    if (app_fault_is_active)
     {
-        if (app_anomaly_is_active)
-        {
-            red_is_on = true;
-        }
-        else
-        {
-            green_is_on = true;
-        }
+        orange_is_on = true;
+        blue_is_on = true;
     }
+    else if (!app_baseline_is_ready)
+    {
+        blue_is_on = true;
+    }
+    else if (app_anomaly_is_active)
+    {
+        red_is_on = true;
+        buzzer_is_on = ((board_io_millis() / APP_BUZZER_BEEP_PERIOD_MS) % 2U) == 0U;
+    }
+    else if (app_warning_is_active)
+    {
+        orange_is_on = true;
+    }
+    else
+    {
+        green_is_on = true;
+    }
+
     board_io_set_status_leds(green_is_on, red_is_on);
+    board_io_set_extra_leds(orange_is_on, blue_is_on);
+    board_io_set_buzzer(buzzer_is_on);
+}
+
+/* Restarts the ten-window baseline learning and clears all latched states. */
+static void app_restart_baseline(void)
+{
+    app_baseline_is_ready = false;
+    app_anomaly_is_active = false;
+    app_warning_is_active = false;
+    app_baseline_windows = 0U;
+    app_baseline_sum_g = 0.0F;
+    app_baseline_rms_g = 0.0F;
+    app_temperature_high_windows = 0U;
+    app_healthy_windows = 0U;
+}
+
+/* User button B1 (PA0) re-learns the baseline; edge-detected and debounced. */
+static void app_handle_button(uint32_t now_ms)
+{
+    bool is_pressed = board_io_button_is_pressed();
+
+    if (is_pressed && !app_button_was_pressed && !app_fault_is_active &&
+        app_time_reached(now_ms, app_button_ignore_until_ms))
+    {
+        app_button_ignore_until_ms = now_ms + APP_BUTTON_DEBOUNCE_MS;
+        app_restart_baseline();
+        (void)printf("RECALIBRATING,NA,NA\r\n");
+    }
+    app_button_was_pressed = is_pressed;
 }
 
 /* Emits one CSV record each second; unavailable readings are never fabricated. */
@@ -302,7 +360,7 @@ static const char *app_status_name(void)
     }
     else if (app_baseline_is_ready)
     {
-        status_name = "NORMAL";
+        status_name = app_warning_is_active ? "WARNING" : "NORMAL";
     }
 
     return status_name;
@@ -321,16 +379,14 @@ void app_start(void)
     board_io_init();
     console_init();
 
+    app_next_sample_deadline_ms = board_io_millis() +
+                                  APP_VIBRATION_SAMPLE_PERIOD_MS;
+    app_next_status_deadline_ms = board_io_millis() +
+                                  APP_STATUS_REPORT_PERIOD_MS;
+
     if (!maintenance_sensor_init())
     {
-        app_enter_fault("initialization");
-    }
-    else
-    {
-        app_next_sample_deadline_ms = board_io_millis() +
-                                      APP_VIBRATION_SAMPLE_PERIOD_MS;
-        app_next_status_deadline_ms = board_io_millis() +
-                                      APP_STATUS_REPORT_PERIOD_MS;
+        app_enter_fault();
     }
 
     app_report_status(board_io_millis());

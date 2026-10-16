@@ -4,6 +4,7 @@
 
 #define HAL_MODULE_ENABLED
 #define HAL_CORTEX_MODULE_ENABLED
+#define HAL_DMA_MODULE_ENABLED
 #define HAL_FLASH_MODULE_ENABLED
 #define HAL_GPIO_MODULE_ENABLED
 #define HAL_ADC_MODULE_ENABLED
@@ -34,6 +35,7 @@
 #define USE_SPI_CRC                       1U
 
 #include "stm32f4xx_hal_def.h"
+#include "stm32f4xx_hal_dma.h"
 #include "stm32f4xx_hal_cortex.h"
 #include "stm32f4xx_hal_flash.h"
 #include "stm32f4xx_hal_gpio.h"
