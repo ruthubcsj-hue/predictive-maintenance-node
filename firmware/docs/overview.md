@@ -8,8 +8,8 @@ This firmware monitors the board's LIS3DSH accelerometer and the STM32F407 inter
 - **Temperature:** ADC1 internal temperature sensor and VREFINT. The STM32F4 factory calibration data and measured VDDA are used for an approximate MCU die temperature, not ambient temperature.
 - **Vibration metric:** remove each axis's mean over 100 samples, then compute RMS of the combined three-axis dynamic acceleration in g. Static gravity is not part of this RMS.
 - **Baseline:** arithmetic mean of the first ten complete one-second RMS windows. The status is `CALIBRATING` until those windows are collected; both indicators remain off unless an anomaly is latched.
-- **Anomaly policy:** vibration RMS greater than 2× baseline (using a one-LSB floor for a near-zero baseline), or temperature above 70 °C for three consecutive one-second readings. An active anomaly clears after three consecutive windows that satisfy both health checks.
-- **Indicators:** blue LD6 = calibrating (first ten windows); green LD4 = normal; orange LD3 = warning (vibration RMS above 1.5x baseline); red LD5 = anomaly, with an optional external active buzzer on PA1 beeping at 2.5 Hz; orange + blue together = sensor/ADC acquisition fault.
+- **Anomaly policy:** vibration RMS greater than 10× baseline (tuned on hardware; the original PRD value was 2×) (using a one-LSB floor for a near-zero baseline), or temperature above 70 °C for three consecutive one-second readings. An active anomaly clears after three consecutive windows that satisfy both health checks.
+- **Indicators:** blue LD6 = calibrating (first ten windows); green LD4 = normal; orange LD3 = warning (vibration RMS above 3x baseline); red LD5 = anomaly, with an optional external active buzzer on PA1 beeping at 2.5 Hz; orange + blue together = sensor/ADC acquisition fault.
 - **Recalibrate:** pressing the user button B1 (PA0) restarts baseline learning and prints `RECALIBRATING,NA,NA`.
 - **Serial:** USART2 TX PA2 at 115200 baud, 8-N-1. Lines have `STATUS,RMS_g,TEMP_C` fields, e.g. `NORMAL,0.025,25.3`; calibration reports `CALIBRATING`, an elevated reading reports `WARNING`, and invalid acquisition reports `FAULT,NA,NA`.
 

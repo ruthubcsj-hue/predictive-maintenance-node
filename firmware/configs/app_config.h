@@ -18,7 +18,7 @@
 #define APP_BUZZER_GPIO_PORT                      GPIOA
 #define APP_BUZZER_GPIO_PIN                       LL_GPIO_PIN_1
 #define APP_BUZZER_BEEP_PERIOD_MS                 200U
-#define APP_VIBRATION_WARNING_MULTIPLIER          1.5F
+#define APP_VIBRATION_WARNING_MULTIPLIER          3.0F
 
 #define APP_UART_TX_GPIO_PORT                     GPIOA
 #define APP_UART_TX_GPIO_PIN                      LL_GPIO_PIN_2
@@ -45,7 +45,7 @@
 #define APP_ADC_CONVERSION_TIMEOUT_MS             5U
 #define APP_SENSOR_STARTUP_SETTLE_MS              1U
 
-#define APP_VIBRATION_ANOMALY_MULTIPLIER          2.0F
+#define APP_VIBRATION_ANOMALY_MULTIPLIER          10.0F
 #define APP_ACCELEROMETER_LSB_G                   0.00012F
 #define APP_ACCELEROMETER_SENSITIVITY_MG_PER_LSB  0.12F
 #define APP_ACCELEROMETER_OUTPUT_SHIFT            0U
